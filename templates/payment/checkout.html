@@ -1,0 +1,852 @@
+﻿{% extends "base.html" %}
+
+{% load static %}
+{% load custom_tags %}
+
+{% block main %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
+    :root {
+        --primary-color: #6b41ff;
+        --secondary-color: #4a11cc;
+        --bg-dark: #1a1a2e;
+        --text-color: #e0e0ff;
+        --accent-color: #00ff9c;
+    }
+    
+    .cart-page {
+        background-color: var(--bg-dark);
+        color: var(--text-color);
+        font-family: 'Orbitron', sans-serif;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .card-header {
+        background-color:  #00ffff , #007bff ;
+        padding: 15px;
+        border-radius: 10px 10px 0 0;
+        margin-bottom: 20px;
+    }
+    .cart_details {
+        background: linear-gradient(135deg, #1e1a1a00 25%, #47abbab5  100%);
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 10px 30px #00ff9c;
+    }
+    .cart_details {
+        position: relative;
+        background: linear-gradient(135deg, rgba(30,26,26,0) 25%, #47abbab5  100%);
+        border-radius: 10px;
+        padding: 20px;
+        overflow: hidden;
+    }
+    
+    .cart_details::after {
+        content: '';
+        position: absolute;
+        inset: 4px;
+        background: var(--dark-bg);
+        border-radius: 8px;
+    }
+    
+.cart_details::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg, 
+        #00ffff,    /* آبی فیروزه‌ای */
+        #007bff,    /* آبی */
+        #00ff89,    /* سبز نئونی */
+        #ff00ff,    /* بنفش */
+        #ff0000     /* قرمز */
+    );
+    border-radius: 12px;
+    animation: borderRotate 3s linear infinite;
+    z-index: -1;
+}
+
+.cart_details::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background: var(--dark-bg);
+    border-radius: 10px;
+    z-index: -1;
+}
+
+@keyframes borderRotate {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+    .cart_details > * {
+        position: relative;
+        z-index: 10;
+    }
+    
+    .card-title {
+        color: white;
+        text-align: center;
+        font-size: 24px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-top: 5.5%;
+    }
+    
+    .table {
+        background-color: #2a2a4a;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    
+    .table thead {
+        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+        color: white;
+    }
+    
+    .table th, .table td {
+        color: var(--text-color);
+        vertical-align: middle;
+        padding: 15px;
+        border-color: rgba(255,255,255,0.1);
+    }
+    
+    .cart_item {
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .cart_item:hover {
+        background-color: rgba(106, 65, 255, 0.1);
+        transform: scale(1.02);
+    }
+    
+    .cart_item img {
+        max-width: 100px;
+        border-radius: 10px;
+        transition: transform 0.3s ease;
+    }
+    
+    .cart_item img:hover {
+        transform: rotate(5deg) scale(1.1);
+    }
+    
+    .cart_item .fa-times {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #ff4136;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    
+    .cart_item .fa-times:hover {
+        transform: scale(1.3) rotate(90deg);
+    }
+    
+    .cart_price del {
+        color: #e052618f;
+        margin-right: 10px;
+    }
+    
+    .cart_price ins {
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    .tedad {
+        width: 70px;
+        background-color: #2a2a4a;
+        color: var(--text-color);
+        border: 1px solid var(--primary-color);
+        border-radius: 5px;
+        text-align: center;
+    }
+    
+    .table_details {
+        background-color: #2a2a4a;
+        border-radius: 10px;
+    }
+    
+    .table_details td {
+        color: var(--text-color);
+        padding: 15px;
+    }
+    
+    .table_details .all {
+        font-weight: bold;
+        background-color: rgba(106, 65, 255, 0.2);
+    }
+    
+    .btn-main-masai {
+        background: linear-gradient(45deg, var(--accent-color), #00cc7a);
+        color: var(--bg-dark);
+        border: none;
+        padding: 15px 30px;
+        margin: 10px;
+        border-radius: 50px;
+        text-transform: uppercase;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,255,156,0.4);
+    }
+    
+    .btn-main-masai:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,255,156,0.6);
+    }
+    
+    /* Gaming Glitch Effect */
+    @keyframes glitch {
+        2%, 64% { transform: translate(2px, 0) skew(0deg); }
+        4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+        62% { transform: translate(0, 0) skew(5deg); }
+    }
+    
+    .card-title span {
+        animation: glitch 1.5s infinite;
+    }
+
+    .price_alltd {
+    background: linear-gradient(
+        135deg, 
+    );
+    color: #0a0a0a;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 15px;
+    box-shadow: 
+        0 10px 20px rgba(0,255,255,0.3),
+        0 -5px 15px rgba(0,123,255,0.2),
+}
+
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 120px;
+}
+
+.quantity-wrapper form {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.tedad {
+    width: 70px;
+    height: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, #1a1b1e 0%, #2c2d33 100%);
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    font-size: 16px;
+    font-weight: bold;
+    outline: none;
+    z-index: 1;
+}
+
+.quantity-btn {
+    position: absolute;
+    margin-left: -5%;
+    margin-right: -37%;
+    width: 30px;
+    height: 100%;
+    background: #00ffff;
+    color: #0a0a0a;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.quantity-btn.increase {
+    right: 0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.quantity-btn.decrease {
+    left: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.quantity-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+
+.price_alltd span {
+    font-size: 0.9em;
+    margin-right: 5px;
+    color: #17ff00;
+    opacity: 2.8;
+}
+
+.tedad {
+    width: 80px;
+    height: 40px;
+    background-color: #2a2a4a;
+    color: #00ff9c;
+    border: 2px solid #6b41ff;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(107, 65, 255, 0.3);
+}
+
+.tedad:focus {
+    border-color: #00ff9c;
+    box-shadow: 0 0 15px rgba(0, 255, 156, 0.5);
+}
+
+.tedad:hover {
+    transform: scale(1.05);
+}
+
+.tedad::-webkit-inner-spin-button,
+.tedad::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.tedad[type=number] {
+    -moz-appearance: textfield;
+}
+.quantity-control {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.quantity-wrapper {
+    display: flex;
+    align-items: center;
+    padding-top: 10%;
+    margin-bottom: 15%;
+    gap: 10px;
+}
+
+.quantity-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #6b41ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+    background-color: #00ff9c;
+    transform: scale(1.1);
+}
+
+.quantity-btn.decrease:hover {
+    background-color: #ff4444;
+}
+
+.tedad {
+    width: 80px;
+    height: 40px;
+    background-color: #2a2a4a;
+    color: #00ff9c;
+    border: 2px solid #6b41ff;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+
+.cart_content .item_property {
+    color: #45ebd4;
+    font-weight: bold;
+    text-align: left;
+}
+
+.product-details-box {
+    display: ruby;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+
+    border-radius: 8px;
+    padding: 10px;
+    max-width: 300px; 
+    margin: 0 auto; 
+}
+
+.product-details-box > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 6px 10px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.04);
+}
+
+.product-details-box > div span:first-child {
+    color: #6c757d;
+    font-weight: 500;
+    margin-left: 6px;
+    font-size: 0.9rem;
+}
+
+.product-details-box > div .item_property {
+    color: #212529;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-details-box {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-details-box {
+        grid-template-columns: 1fr;
+        max-width: 200px;
+    }
+}
+.more-parts-indicator {
+    grid-column: span 3;
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.8rem;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.container {
+    {% comment %} max-width: 1200px; {% endcomment %}
+    margin: auto;
+    padding: 20px;
+}
+
+.cart-page {
+    border: 2px solid #00ff00; /* رنگ سبز که در بازی‌های ویدئویی متداول است */
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    background: rgba(0, 0, 0, 0.8); /* پس‌زمینه تیره با شفافیت */
+}
+
+.card-header {
+    background-color: #2a2a2a;
+    border-bottom: 2px solid #00ff00;
+    padding: 20px;
+    text-align: center;
+    margin-top: 10%;
+}
+
+.card-title {
+    font-size: 2rem;
+    text-shadow: 0 0 5px #00ff00; /* افکت درخشش */
+}
+
+.form-account-title {
+    font-size: 1.2rem;
+    margin: 15px 0 5px;
+    font-weight: bold;
+}
+
+.input_all, .input_textarea {
+    background-color: #333333;
+    border: 2px solid #00ff00;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.input_second {
+    transition: border 0.3s;
+}
+
+.input_second:focus {
+    border-color: #00cc00; /* رنگ تغییر یافته در هنگام فوکوس */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 204, 0, 0.5);
+}
+
+button {
+    background-color: #28a745;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background-color: #218838; /* رنگ تیره‌تر هنگام هاور */
+}
+
+textarea {
+    resize: none; /* غیر فعال کردن اندازه‌گیری متن */
+}
+
+
+.gaming-card {
+    background: linear-gradient(135deg, #1e2745, #2c3e50);
+    border: 2px solid #4a5568;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.gaming-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5);
+}
+
+.gaming-card-header {
+    background-color: #34495e;
+    color: #00ffff;
+    font-weight: bold;
+    padding: 12px 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.address-item {
+    background-color: #2c3e50;
+    margin-bottom: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border-right: 4px solid #3498db;
+    transition: all 0.2s ease;
+}
+
+.address-item:hover {
+    background-color: #34495e;
+    transform: translateX(10px);
+}
+
+.address-item strong {
+    color: #00ffff;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.address-item p {
+    color: #bdc3c7;
+    margin: 0;
+}
+
+.gaming-form-group {
+    background-color: #2c3e50;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.gaming-form-group label {
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.gaming-form-group input {
+    background-color: #34495e;
+    color: #e2e8f0;
+    border: 1px solid #4a5568;
+    transition: all 0.3s ease;
+}
+
+.gaming-form-group input:focus {
+    border-color: #00ffff;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.gaming-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.gaming-btn-confirm {
+    background-color: #2ecc71;
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.gaming-btn-confirm:hover {
+    background-color: #27ae60;
+    transform: translateY(-3px);
+}
+
+.gaming-btn-add {
+    background-color: #3498db;
+    border: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.gaming-btn-add:hover {
+    background-color: #2980b9;
+    transform: translateY(-3px);
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 5px;
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+</style>
+        <main class="cart-page default ">
+            <div class="container">
+                <div class="row">
+                    <div class="Final_payment_content col-12 mx-auto">
+                        <header class="card-header">
+                            <h3 class="card-title"><span>تسویه حساب</span></h3>
+                        </header>
+                        <div class="account-box Final_payment_page">
+
+                            <div class="account-box-content">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-12">
+                                            {% if not existing_addresses %}
+                                            <form method="post" action="{% url "orders:add_address" %}">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-md-12 form-group">
+                                                        <h4>مشخصات گیرنده </h4> 
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.first_name.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.first_name }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.last_name.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.last_name }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.phone_number.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.phone_number }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <hr>
+                                                        <h4>آدرس گیرنده </h4> 
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.postal_code.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.postal_code }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.street.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.street }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.tag.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.tag }}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <label>استان</label>
+                                                        <select class="form-control" name="state" id="state" required>
+                                                            <option value="">انتخاب استان</option>
+                                                            {% for state in states %}
+                                                                <option value="{{ state.id }}">{{ state.name }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <div class="col-md-6 col-sm-12">
+                                                        <label>شهر</label>
+                                                        <select class="form-control" name="city" id="city" required>
+                                                            <option value="">انتخاب شهر</option>
+                                                            {% for city in cities %}
+                                                                <option value="{{ city.id }}">{{ city.id }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    
+                                                    <script>
+                                                        document.getElementById('state').addEventListener('change', function() {
+                                                            var stateId = this.value;
+                                                            fetch(`https://iran-locations-api.ir/api/v1/fa/cities?state_id=${stateId}`)
+                                                                .then(response => response.json())
+                                                                .then(data => {
+                                                                    var citySelect = document.getElementById('city');
+                                                                    citySelect.innerHTML = '<option value="">انتخاب شهر</option>';
+                                                                    data.forEach(city => {
+                                                                        var option = document.createElement('option');
+                                                                        option.value = city.id;
+                                                                        option.text = city.name;
+                                                                        citySelect.add(option);
+                                                                    });
+                                                                });
+                                                        });
+                                                        </script>
+                                                    <div class="col-12">
+                                                        <div class="form-account-title"><span>*</span> {{ form.full_address.label }}</div>
+                                                        <div class="form-account-row">
+                                                            {{ form.full_address }}
+                                                        </div>
+                                                    </div>
+                                                    
+
+                                                    <div class="col-12">
+                                                        <button type="submit" class="btn big_btn btn-main-masai">ثبت آدرس</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            {% else %}
+                                            <div id="addresses-container" class="card gaming-card mb-3">
+                                                <div class="card-header gaming-card-header">
+                                                    آدرس‌های موجود
+                                                </div>
+                                                <div class="card-body">
+                                                    <form method="post" action="{% url 'orders:address_list' %}">
+                                                        {% csrf_token %}
+                                                        {% for address in existing_addresses %}
+                                                            <div class="address-item" data-address-id="{{ address.id }}">
+                                                                <strong>{{ address.get_full_name }}</strong>
+                                                                <p>{{ address.full_address }}</p>
+                                                                <label>
+                                                                    <input type="radio" name="address" value="{{ address.id }}" required>
+                                                                    انتخاب این آدرس
+                                                                </label>
+                                                            </div>
+                                                        {% endfor %}
+                                                        <div class="actions gaming-actions mt-3">
+                                                            <button type="submit" class="btn gaming-btn-confirm btn-success">تایید و ادامه</button>
+                                                            <a href="{% url 'orders:add_address' %}" class="btn gaming-btn-add btn-secondary">
+                                                                افزودن آدرس جدید
+                                                            </a>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-4 col-sm-12">
+                                            <div class="row">
+                                                <table class="table table_details table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>محصول</th>
+                                                            <th>قیمت کل</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                        
+                                                    <tbody>
+                                                        {% for cart_item in cart_items %}
+                                                        <tr>
+                                                            <td>{{ cart_item.product.name }}</td>
+                                                            <td>
+                                                                {% if cart_item.product.discount %}
+                                                                    <span class="text-success">{{ cart_item.get_total_price_product|format_price }} تومان</span>
+                                                                {% else %}
+                                                                    {{ cart_item.get_total_price_product|format_price }} تومان
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                        
+                                                        <tr class="all">
+                                                            <td>مجموع</td>
+                                                            <td>{{ total_price|format_price}} <span>تومان</span></td>
+                                                        </tr>
+                                        
+                                                        <tr>
+                                                            <td colspan="2" class="Final_payment_det">
+                                                                <div class="col-12">
+                                                                    <p>
+                                                                        <i class="fa fa-circle"></i> بعد از پرداخت مستقیم به شماره حساب شرکت، از قسمت چت آنلاین سایت رسید را برای ما ارسال کرده تا پس از تایید محصول برای شما ارسال گردد.
+                                                                        <br />
+                                                                        <i class="fa fa-circle"></i> برای حفظ محیط زیست از نسخه الکترونیکی فاکتور در پروفایل خود به جای چاپ کاغذی می توانید استفاده کنید.
+                                                                    </p>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <div class="d-flex align-items-center flex-column">
+                                                                    <p class="mb-2">هزینه ارسال: {{ tax|format_price }} تومان</p>
+                                                                    <p class="mb-2">جمع کل: {{ grand_total|format_price }} تومان</p>
+                                                                    {% comment %} <a href="{% url "orders:payment_page" %}" class="btn big_btn btn-main-masai mt-3" >ثبت سفارش</a> {% endcomment %}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+{% endblock main %}

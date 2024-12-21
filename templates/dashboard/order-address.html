@@ -1,0 +1,479 @@
+﻿{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+<style>
+    :root {
+        --gaming-bg-dark: #1a1e27;
+        --gaming-bg-medium: #242b3a;
+        --gaming-bg-light: #2f3647;
+        --gaming-text-primary: #e0e6f7;
+        --gaming-text-secondary: #8a95b3;
+        --gaming-accent-primary: #4a90e2;
+        --gaming-accent-secondary: #5e17eb;
+        --gaming-border-radius: 12px;
+    }
+    
+    .order-delivered {
+        background-color: var(--gaming-bg-dark);
+        color: var(--gaming-text-primary);
+        padding: 30px 0;
+    }
+    
+    .card-header {
+        background-color: var(--gaming-bg-medium);
+        border-radius: var(--gaming-border-radius);
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-header .card-title {
+        color: var(--gaming-text-primary);
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-header .card-title span {
+        position: relative;
+    }
+    
+    .card-header .card-title span::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(to right, var(--gaming-accent-primary), var(--gaming-accent-secondary));
+    }
+    
+    .content-section {
+        background-color: var(--gaming-bg-medium);
+        border-radius: var(--gaming-border-radius);
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .profile-recent-fav-row {
+        background-color: var(--gaming-bg-light);
+        border-radius: var(--gaming-border-radius);
+        padding: 20px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .profile-recent-fav-row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(to right, var(--gaming-accent-primary), var(--gaming-accent-secondary));
+    }
+    
+    .profile-recent-fav-row:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+    
+    .profile-recent-fav-name {
+        color: var(--gaming-text-primary);
+        font-size: 18px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .profile-recent-fav-name i {
+        color: var(--gaming-accent-primary);
+        margin-left: 10px;
+    }
+    
+    .profile-recent-fav-row ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 15px;
+        color: var(--gaming-text-secondary);
+    }
+    
+    .profile-recent-fav-row ul li {
+        margin-bottom: 8px;
+    }
+    
+    .profile-recent-fav-row ul li b {
+        color: var(--gaming-text-primary);
+    }
+    
+    .profile-recent-Club {
+        color: var(--gaming-text-primary);
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    
+    .profile-recent-Club i {
+        color: var(--gaming-accent-secondary);
+        margin-left: 10px;
+    }
+    
+    .profile-recent-fav-row img {
+        width: 100%;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+    
+    .profile-recent-fav-row img:hover {
+        transform: scale(1.1);
+    }
+    
+    .btn-error-masai {
+        background: linear-gradient(to right, var(--gaming-accent-primary), var(--gaming-accent-secondary));
+        color: var(--gaming-text-primary);
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+    
+    .btn-error-masai:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+    }
+
+    .order-2 {
+        order: 2 !important;
+        padding-top: 10%;
+    }
+    .btn {
+        padding: 10px 20px;
+    }
+
+    .col-4 {
+        width: 15%;
+        padding-bottom: 2%;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        padding: 15px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .form-account-title {
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .form-account-title span {
+        color: red;
+        margin-left: 5px;
+    }
+    
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        padding: 10px;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    
+    .btn-main-masai {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+    
+    .btn-main-masai:hover {
+        background-color: #0056b3;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+
+    .h1, h2, h3, h4, h5, h6 {
+        color: #0a0a0a;}
+
+    .delete-address {
+            position: absolute;
+            top: 10px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        
+        .delete-address:hover {
+            background-color: #c82333;
+        }
+
+        .col-12 {
+            padding-top: 2%;
+        }
+    </style>
+            <!-- main -->
+            <main class="order-delivered  default space-top-30">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-9 col-lg-8 col-md-12 order-2">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <header class="card-header">
+                                        <h3 class="card-title"><span>آدرس‌ها</span></h3>
+                                        <div style="text-align: left;">
+                                            <button type="button" class="btn btn-main-masai" data-toggle="modal" data-target="#addressModal">
+                                                آدرس جدید
+                                            </button>
+                                        </div>
+
+                                        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+                                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                                        <!-- Modal آدرس جدید -->
+                                        <div class="modal fade" id="addressModal" tabindex="-1" role="dialog" aria-labelledby="addressModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="addressModalLabel">افزودن آدرس جدید</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form method="post" action="{% url "dashboard:address_list" %}">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <div class="col-md-12 form-group">
+                                                                    <h4>مشخصات گیرنده </h4> 
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.first_name.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.first_name }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.last_name.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.last_name }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.phone_number.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.phone_number }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-12 form-group">
+                                                                    <hr>
+                                                                    <h4>آدرس گیرنده </h4> 
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.postal_code.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.postal_code }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.street.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.street }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-sm-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.tag.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.tag }}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-12">
+                                                                    <label>استان</label>
+                                                                    <select class="form-control" name="state" id="state" required>
+                                                                        <option value="">انتخاب استان</option>
+                                                                        {% for state in states %}
+                                                                        <option value="{{ state.id }}">{{ state.name }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-6 col-sm-12">
+                                                                    <label>شهر</label>
+                                                                    <select class="form-control" name="city" id="city" required>
+                                                                        <option value="">انتخاب شهر</option>
+                                                                    </select>
+                                                                </div>
+                                                                
+                                                                <script>
+                                                                    document.getElementById('state').addEventListener('change', function() {
+                                                                        var stateId = this.value;
+                                                                        fetch(`https://iran-locations-api.ir/api/v1/fa/cities?state_id=${stateId}`)
+                                                                            .then(response => response.json())
+                                                                            .then(data => {
+                                                                                var citySelect = document.getElementById('city');
+                                                                                citySelect.innerHTML = '<option value="">انتخاب شهر</option>';
+                                                                                data.forEach(city => {
+                                                                                    var option = document.createElement('option');
+                                                                                    option.value = city.id;
+                                                                                    option.text = city.name;
+                                                                                    citySelect.add(option);
+                                                                                });
+                                                                            });
+                                                                    });
+                                                                </script>
+                                                                <div class="col-12">
+                                                                    <div class="form-account-title"><span>*</span> {{ address_form.full_address.label }}</div>
+                                                                    <div class="form-account-row">
+                                                                        {{ address_form.full_address }}
+                                                                    </div>
+                                                                </div>
+                                                                
+
+                                                                <div class="col-12">
+                                                                    <button type="submit" class="btn big_btn btn-main-masai">ثبت آدرس</button>
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </header>
+                                    <div class="content-section default">
+                                        <div class="row">
+                                            {% if addresses %}
+    {% for address in addresses %}
+    <div class="col-md-12 col-sm-12 order_delivered_sec position-relative">
+        <div class="row">
+            <div class="col-10 col-lg-10 col-md-10">
+                <h4 class="profile-recent-fav-name">
+                    <i class="fa fa-map-pin" aria-hidden="true"></i>{{ address.full_address }}
+                </h4>
+                <ul class="order-addres">
+                    <li>
+                        <i class="fa fa-map colormain" aria-hidden="true"></i> {{ address.state }} ، {{ address.city }}
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope colormain" aria-hidden="true"></i> {{ address.postal_code }}
+                    </li>
+                    <li>
+                        <i class="fa fa-phone colormain" aria-hidden="true"></i> {{ address.phone_number }}
+                    </li>
+                    <li>
+                        <i class="fa fa-user-large colormain" aria-hidden="true"></i> {{ address.get_full_name }}
+                    </li>
+                </ul>
+            </div>
+            <div class="col-2 text-left">
+                <button class="delete-address btn btn-danger btn-sm" 
+                        data-toggle="modal" 
+                        data-target="#deleteAddressModal" 
+                        data-address-id="{{ address.id }}">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+            <hr style='color:white;'/>
+
+                                            {% comment %} map {% endcomment %}
+                                            {% comment %} <div class="col-4 col-lg-2 col-md-2">
+                                                <img src="assets/img/map_2.png" />
+                                            </div> {% endcomment %}
+        </div>
+        
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        شما هیچ ادرسی ثبت نکردید.
+    </div>
+{% endif %}
+                                            
+
+<!-- Modal حذف آدرس -->
+<div class="modal fade" id="deleteAddressModal" tabindex="-1" role="dialog" aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAddressModalLabel">تأیید حذف آدرس</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                آیا مطمئن هستید که می‌خواهید این آدرس را حذف کنید؟
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'dashboard:address_list' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="address_id" id="addressIdToDelete">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-danger">حذف</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('.delete-address').on('click', function() {
+        var addressId = $(this).data('address-id');
+        $('#addressIdToDelete').val(addressId);
+    });
+});
+</script>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% comment %}  {% endcomment %}
+                    {% include "including/dashboard_sidebar.html" %}
+                        
+                    </div>
+                </div>
+            </main>
+            <!-- main -->
+            {% endblock main %}

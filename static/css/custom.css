@@ -1,0 +1,20 @@
+body {
+    text-align: right !important;
+}
+
+@media (min-width: 768px) {
+    body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer, body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
+        transition: margin-right .3s ease-in-out !important;
+        margin-right: 250px !important;
+        margin-left: 0;
+    }
+}
+
+.nav-sidebar .nav-link>.right, .nav-sidebar .nav-link>p>.right {
+    right: 0rem;
+}
+
+.nav {
+    display: contents;
+}
+

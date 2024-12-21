@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+
+{% block main %}
+
+<!-- main-area -->
+<main class="main--area"><!-- breadcrumb-area -->
+    <section class="breadcrumb-area breadcrumb__hide-img" data-background="{% static "assets/img/bg/breadcrumb_bg02.jpg" %}">
+        <div class="container">
+            <div class="breadcrumb__wrapper">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb__content">
+                            <h2 class="title">استاندارد وبلاگ</h2>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index-2.html">خانه</a></li>
+                                    <li aria-current="page" class="breadcrumb-item active">لیست وبلاگ</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- breadcrumb-area-end -->
+    
+    <!-- blog-area -->
+    <section class="blog-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="blog-post-wrapper">
+                    {% for article in articles %}
+                        <div class="blog-post-item">
+                            <div class="blog-post-thumb">
+                                {% comment %} href="{{ article.get_absolute_url }}" {% endcomment %}
+                                <a href="{{ article.get_absolute_url }}">
+                                    {% if article.image %}
+                                        <img 
+                                            alt="{{ article.title }}" 
+                                            src="{{ article.image.url }}" 
+                                            class="img-fluid"
+                                        />
+                                    {% else %}
+                                        <img 
+                                            alt="{{ article.title }}" 
+                                            src="{% static 'images/default-blog.jpg' %}" 
+                                            class="img-fluid"
+                                        />
+                                    {% endif %}
+                                </a>
+                            </div>
+                            <div class="blog-post-content">
+                                <div class="blog-post-meta">
+                                    <ul class="list-wrap">
+                                        <li>
+                                            توسط
+                                            {% comment %} href="{% url 'author_detail' article.author.username %}" {% endcomment %}
+                                            <a >
+                                                {{ article.author.email }}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <i class="far fa-calendar-alt"></i>
+                                            {{ article.created_at|jalali_date }}
+                                        </li>
+                                        <li>
+                                            <i class="far fa-comments"></i>
+                                            {% comment %} href="{{ article.get_absolute_url }}#comments" {% endcomment %}
+                                            <a >
+                                                {% if article.comments_count == 0 %}
+                                                    بدون نظر
+                                                {% elif article.comments_count == 1 %}
+                                                    یک نظر
+                                                {% else %}
+                                                    {{ article.comments_count }} نظر
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h2 class="title">
+                                    <a href="{{ article.get_absolute_url }}">
+                                        {{ article.title }}
+                                    </a>
+                                </h2>
+                                <p>
+                                    {{ article.body|truncatewords:30|safe }}
+                                </p>
+                                <div class="blog-post-bottom">
+                                    <div class="blog-post-read">
+                                        <a href="{{ article.get_absolute_url}}">
+                                            بیشتر بخوانید
+                                            <i class="fas fa-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                    <div class="blog-post-share">
+                                        <h5 class="share"> به اشتراک : </h5>
+                                        <ul class="list-wrap">
+                                            <ul class="list-wrap">
+                                                <li><a href="#"> <i class="fab fa-facebook-f"></i></a></li>
+                                                <li><a href="#"> <i class="fab fa-twitter"></i></a></li>
+                                                <li><a href="#"> <i class="fab fa-linkedin-in"></i></a></li>
+                                            </ul>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="alert alert-info text-center">
+                            مقاله‌ای یافت نشد.
+                        </div>
+                        {% endfor %}
+                    
+                    <div class="pagination__wrap">
+                        <ul class="list-wrap d-flex flex-wrap justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li><a class="page-numbers" href="?page=1&orderby={{ current_sorting }}">اولین</a></li>
+                                <li><a class="page-numbers" href="?page={{ page_obj.previous_page_number }}&orderby={{ current_sorting }}">قبلی</a></li>
+                            {% endif %}
+                    
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if num == page_obj.number %}
+                                    <li><span class="page-numbers current">{{ num }}</span></li>
+                                {% else %}
+                                    <li><a class="page-numbers" href="?page={{ num }}&orderby={{ current_sorting }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                    
+                            {% if page_obj.has_next %}
+                                <li><a class="next page-numbers" href="?page={{ page_obj.next_page_number }}&orderby={{ current_sorting }}">بعدی</a></li>
+                                <li><a class="next page-numbers" href="?page={{ page_obj.paginator.num_pages }}&orderby={{ current_sorting }}">آخرین</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="blog-post-sidebar">
+                    <aside class="blog-sidebar">
+                        <div class="blog-widget">
+                            <div class="sidebar__author">
+                                <div class="sidebar__author-thumb"><img alt="img" src="{% static "assets/img/blog/avatar.jpg" %}" />
+                                </div>
+                                <div class="sidebar__author-content">
+                                    <h4 class="name">Kaceytron G</h4>
+                                    <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ</p>
+                                    <div class="sidebar__author-social"><a href="#"><i class="fab fa-twitter"></i></a><a
+                                            href="#"><i class="fab fa-facebook-f"></i></a><a href="#"><i
+                                                class="fab fa-linkedin-in"></i></a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="blog-widget">
+                            <form class="sidebar-search-form position-relative" method="get">
+                                <input type="text" name="search" placeholder="جستجو کنید..." value="{{ search_query }}" />
+                                <button type="submit">
+                                    <i class="flaticon-loupe"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        
+                        <div class="blog-widget widget_categories">
+                            <h4 class="fw-title">دسته</h4>
+                            <ul class="list-wrap">
+                                {% for category in categories %}
+                                    {% if category.articles_count > 0 %}
+                                        <li>
+                                            {% comment %}  href="{% url 'articles_by_category' category.slug %}" {% endcomment %}
+                                            <a>
+                                                {{ category.name }}
+                                            </a>
+                                            <span class="float-right">({{ category.articles_count }})</span>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="blog-widget">
+                            <h4 class="fw-title">پست های اخیر</h4>
+                            <div class="rc__post-wrapper">
+                                {% for article in most_viewed_today %}
+                                <div class="rc__post-item">
+                                    <div class="rc__post-thumb">
+                                        <a href="{{ article.get_absolute_url }}">
+                                            <img alt="{{ article.title }}" src="{{ article.image.url }}" />
+                                        </a>
+                                    </div>
+                                    <div class="rc__post-content">
+                                        <h6 class="title">
+                                            <a href="{{ article.get_absolute_url }}">
+                                                {{ article.title }}
+                                            </a>
+                                        </h6>
+                                        <span class="date">
+                                            {{ article.created_at|jalali_date }}
+                                        </span>
+                                        <div class="meta-info">
+                                            <span class="views">
+                                                <i class="fas fa-eye"></i> 
+                                                {% if article.hits_count > 0 %}
+                                                    {{ article.hits_count }} بازدید
+                                                {% else %}
+                                                    بدون بازدید
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="blog-widget">
+                            <h4 class="fw-title">برچسب ها</h4>
+                            <div class="tagcloud">
+                                {% for tag in popular_tags %}
+                                    <a href="#">{{ tag.title }} .</a>
+                                {% empty %}
+                                    <p>No tags available</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </section><!-- blog-area-end -->
+</main><!-- main-area-end -->
+
+
+{% endblock main %}

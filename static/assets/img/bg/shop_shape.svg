@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="298"
+   height="406"
+   viewBox="0 0 298 406"
+   fill="none"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="shop_shape.svg"
+   inkscape:version="1.3.2 (091e20ef0f, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.92449665"
+     inkscape:cx="224.9873"
+     inkscape:cy="215.25227"
+     inkscape:window-width="1920"
+     inkscape:window-height="1012"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     d="M 290,0.125 H 8 C 3.651,0.125 0.125,3.65076 0.125,8 v 376.686 c 0,2.089 0.83,4.092 2.307,5.569 l 13.313,13.313 c 1.477,1.477 3.48,2.307 5.569,2.307 H 290 c 4.34924,0 7.875,-3.526 7.875,-7.875 V 8.00001 C 297.875,3.65077 294.34924,0.125 290,0.125 Z"
+     fill="#1b242e"
+     id="path1" />
+  <path
+     d="M8 0.125H290C294.349 0.125 297.875 3.65076 297.875 8V384.686C297.875 386.775 297.045 388.778 295.568 390.255L282.255 403.568C280.778 405.045 278.775 405.875 276.686 405.875H8C3.65076 405.875 0.125 402.349 0.125 398V8.00001C0.125 3.65077 3.65076 0.125 8 0.125Z"
+     stroke="#4C4C4C"
+     stroke-width="0.25"
+     id="path3" />
+  <defs
+     id="defs4">
+    <linearGradient
+       id="paint0_linear_204_52"
+       x1="149"
+       y1="0"
+       x2="149"
+       y2="406"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-1,0,0,1,298,0)">
+      <stop
+         stop-opacity="0"
+         id="stop3" />
+      <stop
+         offset="1"
+         stop-color="#121518"
+         id="stop4" />
+    </linearGradient>
+  </defs>
+</svg>

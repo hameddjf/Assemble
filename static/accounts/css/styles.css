@@ -1,0 +1,6 @@
+.container-login100 {
+    background-image: url('accounts/images/background/poster1.jpg'); /* مسیر تصویر پس‌زمینه */
+    background-size: cover; /* تصویر را به طور کامل پوشش می‌دهد */
+    background-position: center; /* تصویر را در مرکز قرار می‌دهد */
+    position: relative; /* برای اطمینان از اینکه محتویات در بالای پس‌زمینه قرار بگیرند */
+  }

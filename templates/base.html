@@ -1,0 +1,43 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="fa" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>MYKD - قالب گیمینگ زیبا و خلاق</title>
+    <meta name="description" content="eSports and Gaming NFT Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Place favicon.ico in the root directory -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "assets/img/favicon.html" %}">
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="{% static "assets/css/plugins.css" %}">
+    <link rel="stylesheet" href="{% static "assets/css/main.css" %}">
+
+    <!-- Page-Revealer -->
+    <script src="{% static "assets/js/tg-page-head.js" %}"></script>
+</head>
+
+<body>
+{% include "including/header.html" %}
+
+{% block main %}
+{% endblock main %}
+
+<!-- footer-start -->
+ {% include "including/footer.html" %}
+<!-- footer-start-end -->
+
+
+    <!-- JS here -->
+    <script src="{% static "assets/js/vendor/jquery-3.6.0.min.js" %}"></script>
+    <script src="{% static "assets/js/plugins.js" %}"></script>
+    <script src="{% static "assets/js/ajax-form.js" %}"></script>
+    <script src="{% static "assets/js/main.js" %}"></script>
+    <script src="{% static "assets/js/custom.js" %}"></script>
+
+</body>
+
+
+</html>

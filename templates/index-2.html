@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% load static %}
+{% block main %}
+
+
+<!-- main-area -->
+    <section class="banner__area banner__padding">
+        {% for banner in active_banners %}
+
+            {% if banner.banner_type == 'image' %}
+                <div class="banner__bg tg-jarallax" data-background="{{banner.image.url}}"></div>
+            {% elif banner.banner_type == 'video' %}
+                <iframe src="{{ banner.video_url }}" frameborder="0" allowfullscreen class="wow bounceInLeft" data-wow-delay=".6s"></iframe>
+            {% endif %}
+            <div class="container custom-container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-8 col-lg-10">
+                        <div class="banner__content slider__content text-center">
+                            {% if banner.banner_type == 'image' %}
+                                <h2 class="title wow bounceInLeft" data-wow-delay=".2s">{{ banner.title }}</h2>
+                                <p class="wow bounceInLeft" data-wow-delay=".4s">{{ banner.subtitle }}</p>
+                            {% elif banner.banner_type == 'video' %}
+                                <h2 class="title wow bounceInLeft" data-wow-delay=".2s">{{ banner.title }}</h2>
+                                <p class="wow bounceInLeft" data-wow-delay=".4s">{{ banner.subtitle }}</p>
+                            {% endif %}
+                            <div class="banner__btn wow bounceInLeft" data-wow-delay=".6s">
+                                <a class="tg-btn-3 tg-svg mx-auto" href="{{ banner.link }}">
+                                    <div class="svg-icon" data-svg-icon="{% static "assets/img/icons/shape.svg" %}" id="svg-1"></div>
+                                    <span>بیشتر بدانید</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+    <!-- banner-area-end --><!-- match-result-area -->
+
+    <!-- gallery-area -->
+    <section class="gallery__area fix section-pb-130" style='padding-top: 5% !important;'>
+        <div class="gallery__slider">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-9 col-lg-10 col-md-11">
+                        <div class="swiper-container gallery-active">
+                            <div class="swiper-wrapper">
+                                {% for item in special_products %}
+                                    <div class="swiper-slide">
+                                        <div class="gallery__item">
+                                            <div class="gallery__thumb">
+                                                <a href="{{ item.main_image }}" data-cursor="-theme" data-cursor-text="مشاهده <br> تصویر" class="popup-image" title="{{ item.product.name }}">
+                                                    <img src="{{ item.main_image }}" alt="{{ item.product.name }}">
+                                                </a>
+                                            </div>
+                                            <div class="gallery__content">
+                                                <a href="{{ item.product.get_absolute_url }}">
+                                                    <h3 class="title">{{ item.product.name }}</h3>
+                                                </a>
+                                                <span class="rate">امتیاز {{ item.avg_rating }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <!-- scrollbar -->
+                            <div class="swiper-scrollbar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- gallery-area-end -->
+
+    <!-- NFT-item-area -->
+    <section class="nft-item__area">
+        <div class="container custom-container">
+            <div class="row justify-content-center">
+                {% for category in parent_categories %}
+                    <div class="col-xxl-4 col-xl-5 col-lg-6 col-md-9">
+                        <div class="nft-item__box">
+                            <div class="nft-item__content">
+                                <h4 class="title"><a href="{% url 'products:products_list' %}?category={{ category.name }}">{{ category.name }}</a></h4>
+                            </div>
+                            <div class="nft-item__thumb">
+                                <a href="{% url 'products:products_list' %}"><img src="{{ category.image.url }}" alt="img"></a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- NFT-item-area-end -->
+
+    <!-- blog -->
+    <section class="blog-area">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="blog-post-wrapper">
+                    {% for article in latest_articles %}
+                <div class="blog-post-item">
+                    <div class="blog-post-thumb">
+                        <a href="{{ article.get_absolute_url }}"><img alt="{{ article.title }}"src="{{ article.image.url }}" /></a>
+                    </div>
+                    <div class="blog-post-content">
+                        <div class="blog-post-meta">
+                            <ul class="list-wrap">
+                                <li>توسط<a href="#">ادمین</a></li>
+                                <li><i class="far fa-calendar-alt"></i>{{ article.published_at|date:"d F Y" }}</li>
+                                <li><i class="far fa-comments"></i><a href="#">بدون نظر</a></li>
+                            </ul>
+                        </div>
+                        <h2 class="title"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+                        <p>{{ article.body }}</p>
+                        <div class="blog-post-bottom">
+                            <div class="blog-post-read"><a href="{{ article.get_absolute_url }}">بیشتر بخوانید<i
+                                    class="fas fa-arrow-right"></i></a></div> 
+                            <div class="blog-post-share">
+                                <h5 class="share">به اشتراک:</h5>
+                                <ul class="list-wrap">
+                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- blog-end -->
+
+    <!-- match-result-area-end --><!-- area-background-start -->
+    <div class="area-background" data-background="{% static "assets/img/bg/area_bg02.jpg" %}"><!-- about-area -->
+        <section class="about__area-two section-pt-160 section-pb-190">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-xl-6 col-lg-6 order-0 order-lg-2">
+                        <div class="about__funFact-images"><img alt="background" class="bg-shape"
+                                src="{% static "assets/img/others/fun_fact_shape.png" %}" /><img alt="image" class="main-img"
+                                src="{% static "assets/img/others/fun_fact.png" %}" /></div>
+                        <div class="about__funFact-trophy">
+                            <div class="content">
+                                <h5>مسابقات</h5><span>بازی سازی</span>
+                            </div>
+                            <div class="icon"><img alt="trophy" src="{% static "assets/img/icons/trophy.png" %}" /></div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-10">
+                        <div class="section__title text-start mb-30">
+                            <h3 class="title">درباره‌ی ما</h3>
+                        </div>
+                        <div class="about__content-two">
+                            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد، کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.</p>
+                        </div>
+                        <div class="about__content-bottom">
+                            <div class="about__content-circle"><img alt="img" src="{% static "assets/img/icons/circle.svg" %}" /><svg
+                                    version="1.1" viewbox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M 0,75 a 75,75 0 1,1 0,1 z" id="textPath"></path><text>
+                                        <textpath href="#textPath">بازی Super NFT در حال نشستن است</textpath>
+                                    </text>
+                                </svg></div>
+                            <div class="about__funFact-wrap">
+                                <div class="about__funFact-lists">
+                                    <div class="about__funFact-item">
+                                        <h2 class="count"><span class="odometer" data-count="40"></span><span
+                                                class="formatting-mark"هزار/span></h2>
+                                        <p>عضو</p>
+                                    </div>
+                                    <div class="about__funFact-item">
+                                        <h2 class="count"><span class="odometer" data-count="12"></span><span
+                                                class="formatting-mark"هزار/span></h2>
+                                        <p>NFT</p>
+                                    </div>
+                                    <div class="about__funFact-item">
+                                        <h2 class="count"><span class="odometer" data-count="30"></span><span
+                                                class="formatting-mark"هزار/span></h2>
+                                        <p>هنرمند</p>
+                                    </div>
+                                </div>
+                                <div class="about__content-btns"><a class="tg-btn-3 tg-svg" href="contact.html">
+                                        <div class="svg-icon" data-svg-icon="{% static "assets/img/icons/shape.svg" %}" id="svg-6">
+                                        </div><span>بیشتر بخوانید</span>
+                                    </a><a class="popup-video" href="https://www.youtube.com/watch?v=ssrNcwxALS4"><i
+                                            class="fas fa-play"></i><span class="text">چگونه کار می کند</span></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- about-area-end --><!-- streamers-area -->
+    </div><!-- area-background-end --><!-- upcoming-match -->
+
+    <!-- video-area -->
+    {% for join in join_us_entries %}
+        <section class="video__area video-bg tg-jarallax" data-background="{{join.background.url}}">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-8 col-md-11">
+                        <div class="video__content text-center">
+                                <a href="{{ join.video }}" class="popup-video"><i class="flaticon-play"></i></a>
+                                <h2 class="title">{{ join.title }} <span>بپیوندید</span></h2>
+                                <p>{{ join.subtitle }}</p>
+                                <a href="{{ join.link }}" target="_blank" class="video__btn tg-btn-1">
+                                    <span>به سرور دیسکورد ما بپیوندید</span>
+                                </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endfor %}
+
+    <!-- video-area-end -->
+    
+    <section class="social__area social-bg" data-background="{% static "assets/img/bg/social_bg.png" %}">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-lg-7 col-md-10">
+                    <div class="section__title text-center mb-60"><span style="text-align: center;" class="sub-title tg__animate-text">با ما ارتباط
+                            برقرار کنید</span>
+                        <h3 style="text-align: center;" class="title">در ارتباط باشید</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center gutter-20 row-cols-2 row-cols-lg-6 row-cols-md-4 row-cols-sm-3">
+                <div class="col">
+                    <div class="social__item"><a href="#"><i class="flaticon-facebook"></i><span>فیس بوک</span><svg
+                                height="5" viewbox="0 0 65 5" width="65" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M968,5630h65l-4,5H972Z" transform="translate(-968 -5630)"></path>
+                            </svg></a></div>
+                </div>
+                <div class="col">
+                    <div class="social__item"><a href="#"><i class="flaticon-twitter"></i><span>توییتر</span><svg
+                                height="5" viewbox="0 0 65 5" width="65" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M968,5630h65l-4,5H972Z" transform="translate(-968 -5630)"></path>
+                            </svg></a></div>
+                </div>
+                <div class="col">
+                    <div class="social__item"><a href="#"><i class="flaticon-instagram"></i><span>اینستاگرام</span><svg
+                                height="5" viewbox="0 0 65 5" width="65" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M968,5630h65l-4,5H972Z" transform="translate(-968 -5630)"></path>
+                            </svg></a></div>
+                </div>
+                <div class="col">
+                    <div class="social__item"><a href="#"><i class="flaticon-youtube"></i><span>یوتیوب</span><svg
+                                height="5" viewbox="0 0 65 5" width="65" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M968,5630h65l-4,5H972Z" transform="translate(-968 -5630)"></path>
+                            </svg></a></div>
+                </div>
+                <div class="col">
+                    <div class="social__item"><a href="#"><i class="flaticon-discord"></i><span>دیسکورد</span><svg
+                                height="5" viewbox="0 0 65 5" width="65" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M968,5630h65l-4,5H972Z" transform="translate(-968 -5630)"></path>
+                            </svg></a></div>
+                </div>
+                <div class="col">
+                    <div class="social__item"><a href="#"><i class="flaticon-twitch"></i><span>توییچ</span><svg
+                                height="5" viewbox="0 0 65 5" width="65" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M968,5630h65l-4,5H972Z" transform="translate(-968 -5630)"></path>
+                            </svg></a></div>
+                </div>
+            </div>
+        </div>
+    </section><!-- social-area-end --><!-- brand-area -->
+    <section class="brand-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="brand__title text-center">
+                        <h2 class="title"> به ما اعتماد دارند</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row brand-active">
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand01.png" %}" /></a></div>
+                </div>
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand02.png" %}" /></a></div>
+                </div>
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand03.png" %}" /></a></div>
+                </div>
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand04.png" %}" /></a></div>
+                </div>
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand05.png" %}" /></a></div>
+                </div>
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand06.png" %}" /></a></div>
+                </div>
+                <div class="col">
+                    <div class="brand__item"><a class="brand__link" href="#"><img alt="brand"
+                                src="{% static "assets/img/brand/brand07.png" %}" /></a></div>
+                </div>
+            </div>
+        </div>
+    </section><!-- brand-area-end -->
+
+
+{% endblock main %}
