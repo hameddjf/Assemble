@@ -39,8 +39,7 @@ class Cart(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.cart_uuid:
-            self.cart_uuid = f"cart-{timezone.now().strftime('%Y%m%d')
-                                     }-{random.randint(0, 9999)}"
+            self.cart_uuid = f"cart-{timezone.now().strftime('%Y%m%d')}-{random.randint(0, 9999)}"
         super().save(*args, **kwargs)
 
 

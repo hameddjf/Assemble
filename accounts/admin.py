@@ -140,8 +140,7 @@ class AccountAdmin(UserAdmin):
     def verify_selected_emails(self, request, queryset):
         """تایید ایمیل کاربران انتخاب شده"""
         updated = queryset.update(email_verified=True)
-        self.message_user(request, f'ایمیل {
-                          updated} کاربر با موفقیت تایید شد.')
+        self.message_user(request, f'ایمیل {updated} کاربر با موفقیت تایید شد.')
     verify_selected_emails.short_description = "تایید ایمیل کاربران انتخاب شده"
 
     def activate_accounts(self, request, queryset):

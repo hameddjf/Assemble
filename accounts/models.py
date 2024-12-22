@@ -9,7 +9,6 @@ from django.db import models
 
 # Create your models here.
 
-
 class MyAccountManager(BaseUserManager):
     def _create_user(self, email, password=None, **extra_fields):
         if not email:
