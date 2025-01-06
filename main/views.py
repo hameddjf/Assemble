@@ -1,9 +1,11 @@
 from django.views.generic import ListView
+from django.contrib.contenttypes.models import ContentType
 
 from products.models import Products, SpacialsProducts
 from rating.models import Rating
 from category.models import Category
 from blogs.models import Article
+from comments.models import Comment
 
 from .models import Banner, JoinUs
 
@@ -51,6 +53,17 @@ class SpecialProductsListView(ListView):
 
         latest_articles = Article.objects.filter(
             status='published').order_by('-published_at')[:1]
+        
+        # محاسبه تعداد کامنت‌ها برای مقاله
+        for article in latest_articles:
+            content_type = ContentType.objects.get_for_model(Article)
+            total_comments_count = Comment.objects.filter(
+                content_type=content_type, 
+                object_id=article.id,
+                status='approved'
+            ).count()
+            article.total_comments_count = total_comments_count
+        
         context['latest_articles'] = latest_articles
 
         active_banners = Banner.objects.filter(is_active=True)

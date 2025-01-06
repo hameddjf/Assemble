@@ -1,7 +1,71 @@
 {% extends "base.html" %}
 {% load static %}
-{% block main %}
+{% load custom_tags %}
 
+{% block main %}
+<script>
+    function setParentComment(commentId) {
+        // تنظیم شناسه والد
+        document.getElementById('parent_id').value = commentId;
+        
+        // اسکرول به textarea با انیمیشن
+        const commentTextarea = document.getElementById('comment-textarea');
+        const commentForm = document.getElementById('parent_id');
+        
+        // محاسبه موقعیت دقیق برای اسکرول
+        const offset = commentTextarea.getBoundingClientRect().top + window.pageYOffset - 100;
+        
+        // اسکرول با استفاده از window.scrollTo
+        window.scrollTo({
+            top: offset,
+            behavior: 'smooth'
+        });
+        
+        // افزودن کلاس برای انیمیشن چشمک زدن
+        commentForm.classList.add('highlight-form');
+        commentTextarea.focus();
+        
+        // حذف کلاس انیمیشن بعد از 2 ثانیه
+        setTimeout(() => {
+            commentForm.classList.remove('highlight-form');
+        }, 2000);
+    }
+    {% comment %} rating {% endcomment %}
+    function renderStars(averageRating, ratingCount) {
+        const starContainer = document.querySelector('.blog__details-rating');
+        const fullStars = Math.floor(averageRating);
+        const hasHalfStar = averageRating - fullStars >= 0.5;
+        
+        // پاک کردن محتوای قبلی
+        starContainer.innerHTML = '';
+        
+        // ایجاد ستاره‌ها
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+            if (i <= fullStars) {
+                star.className = 'fas fa-star';  // ستاره پر
+            } else if (hasHalfStar && i === fullStars + 1) {
+                star.className = 'fas fa-star-half-alt';  // نیم ستاره
+            } else {
+                star.className = 'far fa-star';  // ستاره خالی
+            }
+            starContainer.appendChild(star);
+        }
+        
+        // اضافه کردن تعداد رتینگ
+        const ratingCountSpan = document.createElement('span');
+        ratingCountSpan.className = 'rating-count';
+        ratingCountSpan.textContent = `(${ratingCount} بررسی مشتری)`;
+        starContainer.appendChild(ratingCountSpan);
+    }
+
+    // اجرای تابع با مقادیر دریافتی از تمپلیت
+    document.addEventListener('DOMContentLoaded', function() {
+        const averageRating = parseFloat('{{ average_rating }}');
+        const ratingCount = parseInt('{{ rating_count }}');
+        renderStars(averageRating, ratingCount);
+    });
+</script>
 
 <!-- main-area -->
     <section class="banner__area banner__padding">
@@ -100,35 +164,45 @@
             <div class="row justify-content-center">
                 <div class="blog-post-wrapper">
                     {% for article in latest_articles %}
-                <div class="blog-post-item">
-                    <div class="blog-post-thumb">
-                        <a href="{{ article.get_absolute_url }}"><img alt="{{ article.title }}"src="{{ article.image.url }}" /></a>
-                    </div>
-                    <div class="blog-post-content">
-                        <div class="blog-post-meta">
-                            <ul class="list-wrap">
-                                <li>توسط<a href="#">ادمین</a></li>
-                                <li><i class="far fa-calendar-alt"></i>{{ article.published_at|date:"d F Y" }}</li>
-                                <li><i class="far fa-comments"></i><a href="#">بدون نظر</a></li>
-                            </ul>
-                        </div>
-                        <h2 class="title"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
-                        <p>{{ article.body }}</p>
-                        <div class="blog-post-bottom">
-                            <div class="blog-post-read"><a href="{{ article.get_absolute_url }}">بیشتر بخوانید<i
-                                    class="fas fa-arrow-right"></i></a></div> 
-                            <div class="blog-post-share">
-                                <h5 class="share">به اشتراک:</h5>
-                                <ul class="list-wrap">
-                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                    <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                </ul>
+                        <div class="blog-post-item">
+                            <div class="blog-post-thumb">
+                                <a href="{{ article.get_absolute_url }}"><img alt="{{ article.title }}"src="{{ article.image.url }}" /></a>
+                            </div>
+                            <div class="blog-post-content">
+                                <div class="blog-post-meta">
+                                    <ul class="list-wrap">
+                                        <li>توسط<a href="#">{{ article.author.email }}</a></li>
+                                        <li><i class="far fa-calendar-alt"></i>{{ article.published_at|jalali_date }}</li>
+                                        <li><i class="far fa-comments"></i>
+                                            <a href="#">                                                
+                                                {% if article.total_comments_count == 0 %}
+                                                    بدون نظر
+                                                {% elif article.total_comments_count == 1 %}
+                                                    یک نظر
+                                                {% else %}
+                                                    {{ article.total_comments_count }} نظر
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <h2 class="title"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+                                <p>{{ article.body }}</p>
+                                <div class="blog-post-bottom">
+                                    <div class="blog-post-read"><a href="{{ article.get_absolute_url }}">بیشتر بخوانید<i
+                                            class="fas fa-arrow-right"></i></a></div> 
+                                    <div class="blog-post-share">
+                                        <h5 class="share">به اشتراک:</h5>
+                                        <ul class="list-wrap">
+                                            <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                            <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

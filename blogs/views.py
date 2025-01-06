@@ -6,9 +6,11 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.db.models import Avg
 
 from category.models import Category, Tag
 from comments.models import Comment
+from rating.models import Rating
 
 from .models import Article
 
@@ -119,7 +121,8 @@ class ArticleListView(BaseArticleView, ListView):
         context['search_query'] = self.request.GET.get('search', '')
         
         return context
-
+    
+    
 class ArticleDetailView(BaseArticleView, DetailView):
     model = Article
     template_name = 'blogs/blog-details.html'
@@ -184,5 +187,17 @@ class ArticleDetailView(BaseArticleView, DetailView):
         context['comments'] = main_comments  
         context['total_comments_count'] = total_comments_count
         
+        # محاسبه امتیازدهی برای مقاله
+        ratings = Rating.objects.filter(content_type=content_type, object_id=self.object.id)
+        average_rating = ratings.aggregate(Avg('score'))['score__avg']
+        if average_rating is None:
+            average_rating = 0
+        rating_count = ratings.count()
+        
+        # اضافه کردن امتیازدهی به کانتکست
+        context['average_rating'] = average_rating
+        context['rating_count'] = rating_count
+        context['full_stars'] = int(average_rating)
+        context['has_half_star'] = average_rating - int(average_rating) >= 0.5
+        
         return context
-    

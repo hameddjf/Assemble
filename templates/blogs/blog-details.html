@@ -3,7 +3,69 @@
 {% load custom_tags %}
 
 {% block main %}
+<script>
+    function setParentComment(commentId) {
+        // تنظیم شناسه والد
+        document.getElementById('parent_id').value = commentId;
+        
+        // اسکرول به textarea با انیمیشن
+        const commentTextarea = document.getElementById('comment-textarea');
+        const commentForm = document.getElementById('parent_id');
+        
+        // محاسبه موقعیت دقیق برای اسکرول
+        const offset = commentTextarea.getBoundingClientRect().top + window.pageYOffset - 100;
+        
+        // اسکرول با استفاده از window.scrollTo
+        window.scrollTo({
+            top: offset,
+            behavior: 'smooth'
+        });
+        
+        // افزودن کلاس برای انیمیشن چشمک زدن
+        commentForm.classList.add('highlight-form');
+        commentTextarea.focus();
+        
+        // حذف کلاس انیمیشن بعد از 2 ثانیه
+        setTimeout(() => {
+            commentForm.classList.remove('highlight-form');
+        }, 2000);
+    }
+    {% comment %} rating {% endcomment %}
+    function renderStars(averageRating, ratingCount) {
+        const starContainer = document.querySelector('.blog__details-rating');
+        const fullStars = Math.floor(averageRating);
+        const hasHalfStar = averageRating - fullStars >= 0.5;
+        
+        // پاک کردن محتوای قبلی
+        starContainer.innerHTML = '';
+        
+        // ایجاد ستاره‌ها
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+            if (i <= fullStars) {
+                star.className = 'fas fa-star';  // ستاره پر
+            } else if (hasHalfStar && i === fullStars + 1) {
+                star.className = 'fas fa-star-half-alt';  // نیم ستاره
+            } else {
+                star.className = 'far fa-star';  // ستاره خالی
+            }
+            starContainer.appendChild(star);
+        }
+        
+        // اضافه کردن تعداد رتینگ
+        const ratingCountSpan = document.createElement('span');
+        ratingCountSpan.className = 'rating-count';
+        ratingCountSpan.textContent = `(${ratingCount} بررسی مشتری)`;
+        starContainer.appendChild(ratingCountSpan);
+    }
 
+    // اجرای تابع با مقادیر دریافتی از تمپلیت
+    document.addEventListener('DOMContentLoaded', function() {
+        const averageRating = parseFloat('{{ average_rating }}');
+        const ratingCount = parseInt('{{ rating_count }}');
+        renderStars(averageRating, ratingCount);
+    });
+</script>
 <!-- main-area -->
 <main class="main--area"><!-- breadcrumb-area -->
     <section class="breadcrumb-area breadcrumb__hide-img" data-background="{% static "assets/img/bg/breadcrumb_bg02.jpg" %}">
@@ -52,6 +114,20 @@
                                             {% endif %}
                                         </a>
                                     </li>
+                                    <li class="blog__details-rating">
+                                        {% with range_stars=5 %}
+                                            {% for i in range_stars|make_list %}
+                                                {% if forloop.counter <= full_stars %}
+                                                    <i class="fas fa-star"></i>
+                                                {% elif has_half_star and forloop.counter == full_stars|add:1 %}
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <span class="rating-count">({{ rating_count }} بررسی)</span>
+                                        {% endwith %}
+                                    </li>
                                 </ul>
                             </div>
                             <h2 class="title">{{ article.title }}</h2>
@@ -98,505 +174,479 @@
                     <div class="comments-wrap">
                         <h4 class="comments-wrap-title">{{ total_comments_count }} نظر</h4>
                         {% if user.is_authenticated %}
-<div class="gaming-rating-container">
-    <h6 class="gaming-rating-title">امتیاز دهی به مقاله</h6>
-    <form method="post" action="{% url 'ratings:rating_create' slug=article.slug %}">
-        {% csrf_token %}
-        <div class="star-rating">
-            <input type="radio" id="star5" name="score" value="5">
-            <label for="star5"><i class="fas fa-star"></i></label>
-            
-            <input type="radio" id="star4" name="score" value="4">
-            <label for="star4"><i class="fas fa-star"></i></label>
-            
-            <input type="radio" id="star3" name="score" value="3">
-            <label for="star3"><i class="fas fa-star"></i></label>
-            
-            <input type="radio" id="star2" name="score" value="2">
-            <label for="star2"><i class="fas fa-star"></i></label>
-            
-            <input type="radio" id="star1" name="score" value="1">
-            <label for="star1"><i class="fas fa-star"></i></label>
-        </div>
-
-        <button type="submit" class="gaming-submit-btn">
-            ارسال امتیاز
-        </button>
-    </form>
-</div>
-{% endif %}
+                            <div class="gaming-rating-container">
+                                <h6 class="gaming-rating-title">امتیاز دهی به مقاله</h6>
+                                <form method="post" action="{% url 'ratings:rating_create' content_type='article' object_slug=article.slug %}">
+                                    {% csrf_token %}
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5" name="score" value="5">
+                                        <label for="star5"><i class="fas fa-star"></i></label>
+                                        
+                                        <input type="radio" id="star4" name="score" value="4">
+                                        <label for="star4"><i class="fas fa-star"></i></label>
+                                        
+                                        <input type="radio" id="star3" name="score" value="3">
+                                        <label for="star3"><i class="fas fa-star"></i></label>
+                                        
+                                        <input type="radio" id="star2" name="score" value="2">
+                                        <label for="star2"><i class="fas fa-star"></i></label>
+                                        
+                                        <input type="radio" id="star1" name="score" value="1">
+                                        <label for="star1"><i class="fas fa-star"></i></label>
+                                    </div>
+                                    
+                                    <button type="submit" class="gaming-submit-btn">
+                                        ارسال امتیاز
+                                    </button>
+                                </form>
+                            </div>
+                        {% endif %}
                         <div class="latest-comments">
                             <script>
-                                            function setParentComment(commentId) {
-                                                // تنظیم شناسه والد
-                                                document.getElementById('parent_id').value = commentId;
-                                                
-                                                // اسکرول به textarea با انیمیشن
-                                                const commentTextarea = document.getElementById('comment-textarea');
-                                                const commentForm = document.getElementById('parent_id');
-                                                
-                                                // محاسبه موقعیت دقیق برای اسکرول
-                                                const offset = commentTextarea.getBoundingClientRect().top + window.pageYOffset - 100;
-                                                
-                                                // اسکرول با استفاده از window.scrollTo
-                                                window.scrollTo({
-                                                    top: offset,
-                                                    behavior: 'smooth'
-                                                });
-                                                
-                                                // افزودن کلاس برای انیمیشن چشمک زدن
-                                                commentForm.classList.add('highlight-form');
-                                                commentTextarea.focus();
-                                                
-                                                // حذف کلاس انیمیشن بعد از 2 ثانیه
-                                                setTimeout(() => {
-                                                    commentForm.classList.remove('highlight-form');
-                                                }, 2000);
-                                            }
-                                            </script>
-                                            
-                                            <style>
-                                                .comment-section {
-                                                    background-color: #1a1a2e;
-                                                    border-radius: 12px;
-                                                    padding: 20px;
-                                                    color: #e0e0e0;
-                                                    font-family: 'Arial', sans-serif;
-                                                }
-                                            
-                                                .gaming-status .status-badge {
-                                                    background-color: #4a4e69;
-                                                    color: #9bf6ff;
-                                                    padding: 8px 15px;
-                                                    border-radius: 20px;
-                                                    display: inline-block;
-                                                    font-weight: bold;
-                                                    font-size: 14px;
-                                                    margin-bottom: 15px;
-                                                }
-                                            
-                                                .gaming-form .form-container {
-                                                    display: flex;
-                                                    flex-direction: column;
-                                                    gap: 15px;
-                                                }
-                                            
-                                                .gaming-textarea {
-                                                    background-color: #2a2a40;
-                                                    color: #e0e0e0;
-                                                    border: 2px solid #4a4e69;
-                                                    border-radius: 8px;
-                                                    padding: 15px;
-                                                    min-height: 120px;
-                                                    transition: all 0.3s ease;
-                                                    font-size: 16px;
-                                                }
-                                            
-                                                .gaming-textarea:focus {
-                                                    outline: none;
-                                                    border-color: #9bf6ff;
-                                                    box-shadow: 0 0 10px rgba(155, 246, 255, 0.3);
-                                                }
-                                            
-                                                .gaming-btn {
-                                                    position: relative;
-                                                    color: #9bf6ff;
-                                                    border: none;
-                                                    padding: 12px 25px;
-                                                    border-radius: 8px;
-                                                    cursor: pointer;
-                                                    font-weight: bold;
-                                                    transition: all 0.3s ease;
-                                                    overflow: hidden;
-                                                }
-                                            
-                                                .gaming-btn .btn-text {
-                                                    position: relative;
-                                                    z-index: 2;
-                                                }
-                                            
-                                                .gaming-btn .btn-hover-effect {
-                                                    position: absolute;
-                                                    top: 0;
-                                                    left: 0;
-                                                    width: 100%;
-                                                    height: 100%;
-                                                    background: linear-gradient(45deg, #9bf6ff, #4ecdc4);
-                                                    opacity: 0;
-                                                    transition: opacity 0.3s ease;
-                                                    z-index: 1;
-                                                }
-                                            
-                                                .gaming-btn:hover {
-                                                    background-color: #7a6b7d;
-                                                }
-                                            
-                                                .gaming-btn:hover .btn-hover-effect {
-                                                    opacity: 0.3;
-                                                }
-                                            
-                                                .gaming-btn:active {
-                                                    transform: scale(0.95);
-                                                }
-                                                .gaming-btn {
-                                                    padding: 10px 20px;
-                                                }
-                                                .comments-list {
-                                                    background-color: #1a1a2e;
-                                                    border-radius: 12px;
-                                                    padding: 20px;
-                                                    color: #e0e0e0;
-                                                }
-                                            
-                                                .comments-box {
-                                                    display: flex;
-                                                    margin-bottom: 15px;
-                                                    background-color: #2a2a40;
-                                                    border-radius: 8px;
-                                                    padding: 15px;
-                                                }
-                                            
-                                                .comments-avatar {
-                                                    margin-left: 15px;
-                                                }
-                                            
-                                                .comments-avatar img {
-                                                    width: 60px;
-                                                    height: 60px;
-                                                    border-radius: 50%;
-                                                    object-fit: cover;
-                                                }
-                                            
-                                                .comments-text {
-                                                    flex-grow: 1;
-                                                }
-                                            
-                                                .avatar-name {
-                                                    display: flex;
-                                                    justify-content: space-between;
-                                                    align-items: center;
-                                                    margin-bottom: 10px;
-                                                }
-                                            
-                                                .avatar-name .name {
-                                                    color: #9bf6ff;
-                                                    margin: 0;
-                                                }
-                                            
-                                                .avatar-name .date {
-                                                    color: #777;
-                                                    font-size: 0.8em;
-                                                }
-                                            
-                                                .comment-reply-link {
-                                                    color: #4ecdc4;
-                                                    margin-right: 10px;
-                                                    text-decoration: none;
-                                                }
-                                            
-                                                .children {
-                                                    margin-right: 50px;
-                                                    margin-top: 15px;
-                                                }
+                                
+                            </script>
+                                
+                            <style>
+                                .comment-section {
+                                    background-color: #1a1a2e;
+                                    border-radius: 12px;
+                                    padding: 20px;
+                                    color: #e0e0e0;
+                                    font-family: 'Arial', sans-serif;
+                                }
+                            
+                                .gaming-status .status-badge {
+                                    background-color: #4a4e69;
+                                    color: #9bf6ff;
+                                    padding: 8px 15px;
+                                    border-radius: 20px;
+                                    display: inline-block;
+                                    font-weight: bold;
+                                    font-size: 14px;
+                                    margin-bottom: 15px;
+                                }
+                            
+                                .gaming-form .form-container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 15px;
+                                }
+                            
+                                .gaming-textarea {
+                                    background-color: #2a2a40;
+                                    color: #e0e0e0;
+                                    border: 2px solid #4a4e69;
+                                    border-radius: 8px;
+                                    padding: 15px;
+                                    min-height: 120px;
+                                    transition: all 0.3s ease;
+                                    font-size: 16px;
+                                }
+                            
+                                .gaming-textarea:focus {
+                                    outline: none;
+                                    border-color: #9bf6ff;
+                                    box-shadow: 0 0 10px rgba(155, 246, 255, 0.3);
+                                }
+                            
+                                .gaming-btn {
+                                    position: relative;
+                                    color: #9bf6ff;
+                                    border: none;
+                                    padding: 12px 25px;
+                                    border-radius: 8px;
+                                    cursor: pointer;
+                                    font-weight: bold;
+                                    transition: all 0.3s ease;
+                                    overflow: hidden;
+                                }
+                            
+                                .gaming-btn .btn-text {
+                                    position: relative;
+                                    z-index: 2;
+                                }
+                            
+                                .gaming-btn .btn-hover-effect {
+                                    position: absolute;
+                                    top: 0;
+                                    left: 0;
+                                    width: 100%;
+                                    height: 100%;
+                                    background: linear-gradient(45deg, #9bf6ff, #4ecdc4);
+                                    opacity: 0;
+                                    transition: opacity 0.3s ease;
+                                    z-index: 1;
+                                }
+                            
+                                .gaming-btn:hover {
+                                    background-color: #7a6b7d;
+                                }
+                            
+                                .gaming-btn:hover .btn-hover-effect {
+                                    opacity: 0.3;
+                                }
+                            
+                                .gaming-btn:active {
+                                    transform: scale(0.95);
+                                }
+                                .gaming-btn {
+                                    padding: 10px 20px;
+                                }
+                                .comments-list {
+                                    background-color: #1a1a2e;
+                                    border-radius: 12px;
+                                    padding: 20px;
+                                    color: #e0e0e0;
+                                }
+                            
+                                .comments-box {
+                                    display: flex;
+                                    margin-bottom: 15px;
+                                    background-color: #2a2a40;
+                                    border-radius: 8px;
+                                    padding: 15px;
+                                }
+                            
+                                .comments-avatar {
+                                    margin-left: 15px;
+                                }
+                            
+                                .comments-avatar img {
+                                    width: 60px;
+                                    height: 60px;
+                                    border-radius: 50%;
+                                    object-fit: cover;
+                                }
+                            
+                                .comments-text {
+                                    flex-grow: 1;
+                                }
+                            
+                                .avatar-name {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    margin-bottom: 10px;
+                                }
+                            
+                                .avatar-name .name {
+                                    color: #9bf6ff;
+                                    margin: 0;
+                                }
+                            
+                                .avatar-name .date {
+                                    color: #777;
+                                    font-size: 0.8em;
+                                }
+                            
+                                .comment-reply-link {
+                                    color: #4ecdc4;
+                                    margin-right: 10px;
+                                    text-decoration: none;
+                                }
+                            
+                                .children {
+                                    margin-right: 50px;
+                                    margin-top: 15px;
+                                }
 
-                                            @keyframes highlight-animation {
-                                                0% { 
-                                                    background-color: rgba(255, 255, 0, 0.1);
-                                                    box-shadow: 0 0 5px rgba(255, 255, 0, 0.3);
-                                                }
-                                                50% { 
-                                                    background-color: rgba(255, 255, 0, 0.3);
-                                                    box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
-                                                }
-                                                100% { 
-                                                    background-color: rgba(255, 255, 0, 0.1);
-                                                    box-shadow: 0 0 5px rgba(255, 255, 0, 0.3);
-                                                }
-                                            }
-                                            
-                                            .highlight-form {
-                                                animation: highlight-animation 3s ease-in-out;
-                                            }
-                                            
-                                            #comment-textarea {
-                                                transition: all 0.3s ease;
-                                            }
+                                @keyframes highlight-animation {
+                                    0% { 
+                                        background-color: rgba(255, 255, 0, 0.1);
+                                        box-shadow: 0 0 5px rgba(255, 255, 0, 0.3);
+                                    }
+                                    50% { 
+                                        background-color: rgba(255, 255, 0, 0.3);
+                                        box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
+                                    }
+                                    100% { 
+                                        background-color: rgba(255, 255, 0, 0.1);
+                                        box-shadow: 0 0 5px rgba(255, 255, 0, 0.3);
+                                    }
+                                }
+                                
+                                .highlight-form {
+                                    animation: highlight-animation 3s ease-in-out;
+                                }
+                                
+                                #comment-textarea {
+                                    transition: all 0.3s ease;
+                                }
 
-                                            .comment-reactions {
-                                                display: flex;
-                                                gap: 10px; /* فاصله بین دکمه‌ها */
-                                            }
-                                            
+                                .comment-reactions {
+                                    display: flex;
+                                    gap: 10px; /* فاصله بین دکمه‌ها */
+                                }
+                                
 
-                                            .comment-reactions {
-                                                display: flex;
-                                                align-items: center;
-                                                gap: 15px;
-                                                margin-top: 10px;
-                                                background-color: rgba(30, 40, 60, 0.7);
-                                                padding: 8px 12px;
-                                                border-radius: 20px;
-                                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-                                            }
-                                            
-                                            .reaction-button {
-                                                background: transparent;
-                                                border: none;
-                                                color: #4a90e2;
-                                                cursor: pointer;
-                                                transition: all 0.3s ease;
-                                                display: flex;
-                                                align-items: center;
-                                                gap: 5px;
-                                                font-family: 'Press Start 2P', cursive; /* فونت گیمینگ */
-                                            }
-                                            
-                                            .reaction-button:hover {
-                                                transform: scale(1.1);
-                                                color: #00ff9c; /* رنگ نئون برای هاور */
-                                            }
-                                            
-                                            .reaction-button i {
-                                                font-size: 18px;
-                                                text-shadow: 0 0 5px rgba(0, 255, 156, 0.5);
-                                            }
-                                            
-                                            .reaction-count {
-                                                background-color: rgba(74, 144, 226, 0.2);
-                                                color: #4a90e2;
-                                                padding: 2px 6px;
-                                                border-radius: 10px;
-                                                font-size: 12px;
-                                                min-width: 25px;
-                                                text-align: center;
-                                                transition: background-color 0.3s ease;
-                                            }
-                                            
-                                            .reaction-button:hover .reaction-count {
-                                                background-color: rgba(0, 255, 156, 0.3);
-                                                color: #00ff9c;
-                                            }
-                                            
-                                            /* استایل انیمیشن برای کلیک */
-                                            @keyframes pulse {
-                                                0% { transform: scale(1); }
-                                                50% { transform: scale(1.2); }
-                                                100% { transform: scale(1); }
-                                            }
-                                            
-                                            .reaction-button:active {
-                                                animation: pulse 0.3s ease;
-                                            }
-                                            
-                                            /* استایل برای حالت فعال */
-                                            .reaction-button.active {
-                                                color: #00ff9c;
-                                            }
-                                            
-                                            .reaction-button.active .reaction-count {
-                                                background-color: rgba(0, 255, 156, 0.5);
-                                                color: #ffffff;
-                                            }
+                                .comment-reactions {
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 15px;
+                                    margin-top: 10px;
+                                    background-color: rgba(30, 40, 60, 0.7);
+                                    padding: 8px 12px;
+                                    border-radius: 20px;
+                                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                                }
+                                
+                                .reaction-button {
+                                    background: transparent;
+                                    border: none;
+                                    color: #4a90e2;
+                                    cursor: pointer;
+                                    transition: all 0.3s ease;
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 5px;
+                                    font-family: 'Press Start 2P', cursive; /* فونت گیمینگ */
+                                }
+                                
+                                .reaction-button:hover {
+                                    transform: scale(1.1);
+                                    color: #00ff9c; /* رنگ نئون برای هاور */
+                                }
+                                
+                                .reaction-button i {
+                                    font-size: 18px;
+                                    text-shadow: 0 0 5px rgba(0, 255, 156, 0.5);
+                                }
+                                
+                                .reaction-count {
+                                    background-color: rgba(74, 144, 226, 0.2);
+                                    color: #4a90e2;
+                                    padding: 2px 6px;
+                                    border-radius: 10px;
+                                    font-size: 12px;
+                                    min-width: 25px;
+                                    text-align: center;
+                                    transition: background-color 0.3s ease;
+                                }
+                                
+                                .reaction-button:hover .reaction-count {
+                                    background-color: rgba(0, 255, 156, 0.3);
+                                    color: #00ff9c;
+                                }
+                                
+                                /* استایل انیمیشن برای کلیک */
+                                @keyframes pulse {
+                                    0% { transform: scale(1); }
+                                    50% { transform: scale(1.2); }
+                                    100% { transform: scale(1); }
+                                }
+                                
+                                .reaction-button:active {
+                                    animation: pulse 0.3s ease;
+                                }
+                                
+                                /* استایل برای حالت فعال */
+                                .reaction-button.active {
+                                    color: #00ff9c;
+                                }
+                                
+                                .reaction-button.active .reaction-count {
+                                    background-color: rgba(0, 255, 156, 0.5);
+                                    color: #ffffff;
+                                }
 
-                                            {% comment %} rating {% endcomment %}
-    .star-rating {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        direction: ltr;
-        margin: 15px 0;
-    }
+                                {% comment %} rating {% endcomment %}
+                                .star-rating {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    direction: ltr;
+                                    margin: 15px 0;
+                                }
 
-    .star-rating input {
-        display: none;
-    }
+                                .star-rating input {
+                                    display: none;
+                                }
 
-    .star-rating label {
-        display: inline-block;
-        cursor: pointer;
-        margin: 0 5px;
-        transition: transform 0.2s ease;
-    }
+                                .star-rating label {
+                                    display: inline-block;
+                                    cursor: pointer;
+                                    margin: 0 5px;
+                                    transition: transform 0.2s ease;
+                                }
 
-    .star-rating label i {
-        font-size: 24px;
-        color: #ddd;
-        transition: color 0.3s ease;
-    }
+                                .star-rating label i {
+                                    font-size: 24px;
+                                    color: #ddd;
+                                    transition: color 0.3s ease;
+                                }
 
-    .star-rating label:hover i,
-    .star-rating label:hover ~ label i {
-        color: #ffc107;
-    }
+                                .star-rating label:hover i,
+                                .star-rating label:hover ~ label i {
+                                    color: #ffc107;
+                                }
 
-    .star-rating input:checked ~ label i {
-        color: #ffc107;
-    }
+                                .star-rating input:checked ~ label i {
+                                    color: #ffc107;
+                                }
 
-    .star-rating input:checked + label i,
-    .star-rating input:checked + label ~ label i {
-        color: #ffc107;
-    }
+                                .star-rating input:checked + label i,
+                                .star-rating input:checked + label ~ label i {
+                                    color: #ffc107;
+                                }
 
-    .star-rating label:hover {
-        transform: scale(1.2);
-    }
+                                .star-rating label:hover {
+                                    transform: scale(1.2);
+                                }
 
-    .gaming-rating-container {
-        background: #1a1a2e;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 
-            0 0 15px rgba(0,255,255,0.2),
-            inset 0 0 10px rgba(0,255,255,0.1);
-        border: 2px solid #16213e;
-    }
-    
-    .gaming-rating-title {
-        color: #0f3460;
-        background: linear-gradient(45deg, #e94560, #ff6b88);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-align: center;
-        font-weight: bold;
-    }
+                                .gaming-rating-container {
+                                    background: #1a1a2e;
+                                    border-radius: 10px;
+                                    padding: 20px;
+                                    margin-bottom: 20px;
+                                    box-shadow: 
+                                        0 0 15px rgba(0,255,255,0.2),
+                                        inset 0 0 10px rgba(0,255,255,0.1);
+                                    border: 2px solid #16213e;
+                                }
+                                
+                                .gaming-rating-title {
+                                    color: #0f3460;
+                                    background: linear-gradient(45deg, #e94560, #ff6b88);
+                                    -webkit-background-clip: text;
+                                    -webkit-text-fill-color: transparent;
+                                    text-align: center;
+                                    font-weight: bold;
+                                }
 
-    .gaming-submit-btn {
-        display: block;
-        width: 100%;
-        max-width: 200px;
-        margin: 15px auto;
-        background: #e94560;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+                                .gaming-submit-btn {
+                                    display: block;
+                                    width: 100%;
+                                    max-width: 200px;
+                                    margin: 15px auto;
+                                    background: #e94560;
+                                    color: white;
+                                    border: none;
+                                    padding: 10px 15px;
+                                    border-radius: 5px;
+                                    cursor: pointer;
+                                    transition: all 0.3s ease;
+                                }
 
-    .gaming-submit-btn:hover {
-        background: #ff6b88;
-        transform: scale(1.05);
-    }
-                                            </style>
-                                            {% if user.is_authenticated %}
-                                                <div class="comment-form gaming-form">
-                                                    <h3 class="comment-reply-title">پاسخ دهید</h3>
-                                                    <form method="post" action="{% url 'comments:comment_create' content_type='article' object_id=article.id %}">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="parent_id" id="parent_id" value="">
-                                                        <div class="form-container">
-                                                            <textarea 
-                                                                name="body" 
-                                                                placeholder="نظر خود را در اینجا بنویسید..." 
-                                                                required 
-                                                                class="gaming-textarea"
-                                                                id="comment-textarea"
-                                                            ></textarea>
-                                                            <button type="submit" class="gaming-btn">
-                                                                <span class="btn-text">ارسال نظر</span>
-                                                                <div class="btn-hover-effect"></div>
-                                                            </button>                                                        </div>
-                                                    </form>
+                                .gaming-submit-btn:hover {
+                                    background: #ff6b88;
+                                    transform: scale(1.05);
+                                }
+                            </style>
+                            {% if user.is_authenticated %}
+                                <div class="comment-form gaming-form">
+                                    <h3 class="comment-reply-title">پاسخ دهید</h3>
+                                    <form method="post" action="{% url 'comments:comment_create' content_type='article' object_id=article.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="parent_id" id="parent_id" value="">
+                                        <div class="form-container">
+                                            <textarea 
+                                                name="body" 
+                                                placeholder="نظر خود را در اینجا بنویسید..." 
+                                                required 
+                                                class="gaming-textarea"
+                                                id="comment-textarea"
+                                            ></textarea>
+                                            <button type="submit" class="gaming-btn">
+                                                <span class="btn-text">ارسال نظر</span>
+                                                <div class="btn-hover-effect"></div>
+                                            </button>                                                        </div>
+                                    </form>
+                                </div>
+                            {% endif %}
+                            <ul class="list-wrap comments-list">
+                                {% if comments %}
+                                    {% for comment in comments %}
+                                        <li class="main-comment">
+                                            <div class="comments-box">
+                                                <div class="comments-avatar">
+                                                    {% if comment.user.profile_image %}
+                                                        <img alt="{{ comment.user.email }}" src="{{ comment.user.profile_image.url }}" />
+                                                    {% else %}
+                                                        <img alt="{{ comment.user.email }}" src="{% static 'accounts/images/icons/avatar.jpg' %}" />
+                                                    {% endif %}
                                                 </div>
-                                            {% endif %}
-                                            <ul class="list-wrap comments-list">
-                                                {% if comments %}
-                                                    {% for comment in comments %}
-                                                        <li class="main-comment">
-                                                            <div class="comments-box">
-                                                                <div class="comments-avatar">
-                                                                    {% if comment.user.profile_image %}
-                                                                        <img alt="{{ comment.user.email }}" src="{{ comment.user.profile_image.url }}" />
-                                                                    {% else %}
-                                                                        <img alt="{{ comment.user.email }}" src="{% static 'accounts/images/icons/avatar.jpg' %}" />
-                                                                    {% endif %}
-                                                                </div>
-                                                                <div class="comments-text">
-                                                                    <div class="avatar-name">
-                                                                        <h6 class="name">
-                                                                            {{ comment.user.email }}
-                                                                            {% if user.is_authenticated %}
-                                                                                <a class="comment-reply-link" href="#comment-form" 
-                                                                                onclick="setParentComment({{ comment.id }})">
-                                                                                    <i class="fas fa-reply"></i>پاسخ
-                                                                                </a>
-                                                                            {% endif %}
-                                                                        </h6>
-                                                                        <span class="date">
-                                                                            {{ comment.created_at|jalali_date }}
-                                                                        </span>
-                                                                    </div>
-                                                                    <p>{{ comment.body }}</p>
-                                                                    
-                                                                    <!-- بخش واکنش‌ها -->
-                                                                    <div class="comment-reactions">
-                                                                        <form method="POST" action="{% url 'comments:comment_reaction' comment.id 'like' %}">
-                                                                            {% csrf_token %}
-                                                                            <button type="submit" 
-                                                                                    class="reaction-button" 
-                                                                                    data-reaction="like" 
-                                                                                    data-comment-id="{{ comment.id }}">
-                                                                                <i class="fas fa-thumbs-up"></i> 
-                                                                                <span class="reaction-count">{{ comment.like_count }}</span>
-                                                                            </button>
-                                                                        </form>
-                                                                        <form method="POST" action="{% url 'comments:comment_reaction' comment.id 'dislike' %}">
-                                                                            {% csrf_token %}
-                                                                            <button type="submit" 
-                                                                                    class="reaction-button" 
-                                                                                    data-reaction="dislike" 
-                                                                                    data-comment-id="{{ comment.id }}">
-                                                                                <i class="fas fa-thumbs-down"></i> 
-                                                                                <span class="reaction-count">{{ comment.dislike_count }}</span>
-                                                                            </button>
-                                                                        </form>
-                                                                    </div>
-                                                                    <!-- پایان بخش واکنش‌ها -->
-                                                                </div>
+                                                <div class="comments-text">
+                                                    <div class="avatar-name">
+                                                        <h6 class="name">
+                                                            {{ comment.user.email }}
+                                                            {% if user.is_authenticated %}
+                                                                <a class="comment-reply-link" href="#comment-form" 
+                                                                onclick="setParentComment({{ comment.id }})">
+                                                                    <i class="fas fa-reply"></i>پاسخ
+                                                                </a>
+                                                            {% endif %}
+                                                        </h6>
+                                                        <span class="date">
+                                                            {{ comment.created_at|jalali_date }}
+                                                        </span>
+                                                    </div>
+                                                    <p>{{ comment.body }}</p>
+                                                    
+                                                    <!-- بخش واکنش‌ها -->
+                                                    <div class="comment-reactions">
+                                                        <form method="POST" action="{% url 'comments:comment_reaction' comment.id 'like' %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" 
+                                                                    class="reaction-button" 
+                                                                    data-reaction="like" 
+                                                                    data-comment-id="{{ comment.id }}">
+                                                                <i class="fas fa-thumbs-up"></i> 
+                                                                <span class="reaction-count">{{ comment.like_count }}</span>
+                                                            </button>
+                                                        </form>
+                                                        <form method="POST" action="{% url 'comments:comment_reaction' comment.id 'dislike' %}">
+                                                            {% csrf_token %}
+                                                            <button type="submit" 
+                                                                    class="reaction-button" 
+                                                                    data-reaction="dislike" 
+                                                                    data-comment-id="{{ comment.id }}">
+                                                                <i class="fas fa-thumbs-down"></i> 
+                                                                <span class="reaction-count">{{ comment.dislike_count }}</span>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                    <!-- پایان بخش واکنش‌ها -->
+                                                </div>
+                                            </div>
+                                        </li>
+                                        
+                                        {% if comment.approved_replies %}
+                                            <ul class="replies-list">
+                                                {% for reply in comment.approved_replies %}
+                                                    <li class="reply-comment">
+                                                        <div class="comments-box reply-box">
+                                                            <div class="comments-avatar">
+                                                                {% if reply.user.profile_image %}
+                                                                    <img alt="{{ reply.user.email }}" src="{{ reply.user.profile_image.url }}" />
+                                                                {% else %}
+                                                                    <img alt="{{ reply.user.email }}" src="{% static 'accounts/images/icons/avatar.jpg' %}" />
+                                                                {% endif %}
                                                             </div>
-                                                        </li>
-                                                        
-                                                        {% if comment.approved_replies %}
-                                                            <ul class="replies-list">
-                                                                {% for reply in comment.approved_replies %}
-                                                                    <li class="reply-comment">
-                                                                        <div class="comments-box reply-box">
-                                                                            <div class="comments-avatar">
-                                                                                {% if reply.user.profile_image %}
-                                                                                    <img alt="{{ reply.user.email }}" src="{{ reply.user.profile_image.url }}" />
-                                                                                {% else %}
-                                                                                    <img alt="{{ reply.user.email }}" src="{% static 'accounts/images/icons/avatar.jpg' %}" />
-                                                                                {% endif %}
-                                                                            </div>
-                                                                            <div class="comments-text">
-                                                                                <div class="avatar-name">
-                                                                                    <h6 class="name">
-                                                                                        {{ reply.user.email }}
-                                                                                    </h6>
-                                                                                    <span class="date">
-                                                                                        {{ reply.created_at|jalali_date }}
-                                                                                    </span>
-                                                                                </div>
-                                                                                <p>{{ reply.body }}</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </li>
-                                                                {% endfor %}
-                                                            </ul>
-                                                        {% endif %}
-                                                    {% endfor %}
-                                                {% else %}
-                                                    <li class="no-comments">
-                                                        <p>هنوز نظری برای این محصول ثبت نشده است</p>
+                                                            <div class="comments-text">
+                                                                <div class="avatar-name">
+                                                                    <h6 class="name">
+                                                                        {{ reply.user.email }}
+                                                                    </h6>
+                                                                    <span class="date">
+                                                                        {{ reply.created_at|jalali_date }}
+                                                                    </span>
+                                                                </div>
+                                                                <p>{{ reply.body }}</p>
+                                                            </div>
+                                                        </div>
                                                     </li>
-                                                {% endif %}
+                                                {% endfor %}
                                             </ul>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="no-comments">
+                                        <p>هنوز نظری برای این محصول ثبت نشده است</p>
+                                    </li>
+                                {% endif %}
+                            </ul>
                         </div>
                     </div>
-                    
                 </div>
                 <div class="blog-post-sidebar">
                     <aside class="blog-sidebar">

@@ -505,7 +505,7 @@
                                         {% if user.is_authenticated %}
 <div class="gaming-rating-container">
     <h6 class="gaming-rating-title">امتیاز دهی به محصول</h6>
-    <form method="post" action="{% url 'ratings:rating_create' slug=product.slug %}">
+    <form method="post" action="{% url 'ratings:rating_create' content_type='products' object_slug=product.slug %}">
         {% csrf_token %}
         <div class="star-rating">
             <input type="radio" id="star5" name="score" value="5">
@@ -523,7 +523,7 @@
             <input type="radio" id="star1" name="score" value="1">
             <label for="star1"><i class="fas fa-star"></i></label>
         </div>
-
+    
         <button type="submit" class="gaming-submit-btn">
             ارسال امتیاز
         </button>

@@ -4,5 +4,6 @@ from . import views
 app_name = 'ratings'
 
 urlpatterns = [
-    path('create/<slug:slug>/', views.RatingCreateView.as_view(), name='rating_create'),
+    # path('create/<slug:slug>/', views.RatingCreateView.as_view(), name='rating_create'),
+    path('create/<str:content_type>/<str:object_slug>/', views.RatingCreateView.as_view(), name='rating_create'),
 ]
