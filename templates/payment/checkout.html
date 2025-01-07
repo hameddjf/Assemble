@@ -768,7 +768,13 @@ textarea {
                                                         {% for address in existing_addresses %}
                                                             <div class="address-item" data-address-id="{{ address.id }}">
                                                                 <strong>{{ address.get_full_name }}</strong>
-                                                                <p>{{ address.full_address }}</p>
+                                                                <p class="text-wrap">{{ address.full_address }}</p>
+                                                                <style>
+                                                                        .text-wrap {
+                                                                            word-wrap: break-word;
+                                                                            white-space: normal;
+                                                                        }
+                                                                </style>
                                                                 <label>
                                                                     <input type="radio" name="address" value="{{ address.id }}" required>
                                                                     انتخاب این آدرس
@@ -831,8 +837,9 @@ textarea {
                                                         <tr>
                                                             <td colspan="2">
                                                                 <div class="d-flex align-items-center flex-column">
-                                                                    <p class="mb-2">هزینه ارسال: {{ tax|format_price }} تومان</p>
-                                                                    <p class="mb-2">جمع کل: {{ grand_total|format_price }} تومان</p>
+                                                                    <p class="mb-2 text-wrap">هزینه ارسال: {{ tax|format_price }} تومان</p>
+                                                                    <p class="mb-2 text-wrap">جمع کل: {{ grand_total|format_price }} تومان</p>
+
                                                                     {% comment %} <a href="{% url "orders:payment_page" %}" class="btn big_btn btn-main-masai mt-3" >ثبت سفارش</a> {% endcomment %}
                                                                 </div>
                                                             </td>

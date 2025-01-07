@@ -85,9 +85,13 @@
                                         {{ article.title }}
                                     </a>
                                 </h2>
-                                <p>
-                                    {{ article.body|truncatewords:30|safe }}
-                                </p>
+                                <p class="text-wrap">{{ article.body|truncatewords:30|safe }}</p>
+                                <style>
+                                    .text-wrap {
+                                        word-wrap: break-word;
+                                        white-space: normal;
+                                      }
+                                </style>
                                 <div class="blog-post-bottom">
                                     <div class="blog-post-read">
                                         <a href="{{ article.get_absolute_url}}">

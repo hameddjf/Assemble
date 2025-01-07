@@ -4,240 +4,215 @@
 
 {% block main %}
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
-    :root {
-        --primary-color: #6b41ff;
-        --secondary-color: #4a11cc;
-        --bg-dark: #1a1a2e;
-        --text-color: #e0e0ff;
-        --accent-color: #00ff9c;
-    }
-    
-    .cart-page {
-        background-color: var(--bg-dark);
-        color: var(--text-color);
-        font-family: 'Orbitron', sans-serif;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    
-    .card-header {
-        background-color:  #00ffff , #007bff ;
-        padding: 15px;
-        border-radius: 10px 10px 0 0;
-        margin-bottom: 20px;
-    }
-    .cart_details {
-        background: linear-gradient(135deg, #1e1a1a00 25%, #47abbab5  100%);
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 10px 30px #00ff9c;
-    }
-    .cart_details {
-        position: relative;
-        background: linear-gradient(135deg, rgba(30,26,26,0) 25%, #47abbab5  100%);
-        border-radius: 10px;
-        padding: 20px;
-        overflow: hidden;
-    }
-    
-    .cart_details::after {
-        content: '';
-        position: absolute;
-        inset: 4px;
-        background: var(--dark-bg);
-        border-radius: 8px;
-    }
-    
-.cart_details::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-        45deg, 
-        #00ffff,    /* آبی فیروزه‌ای */
-        #007bff,    /* آبی */
-        #00ff89,    /* سبز نئونی */
-        #ff00ff,    /* بنفش */
-        #ff0000     /* قرمز */
-    );
-    border-radius: 12px;
-    animation: borderRotate 3s linear infinite;
-    z-index: -1;
-}
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
 
-.cart_details::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    background: var(--dark-bg);
-    border-radius: 10px;
-    z-index: -1;
-}
+    /* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
 
-@keyframes borderRotate {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-    .cart_details > * {
-        position: relative;
-        z-index: 10;
-    }
-    
-    .card-title {
-        color: white;
-        text-align: center;
-        font-size: 24px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-top: 5.5%;
-    }
-    
-    .table {
-        background-color: #2a2a4a;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-    
     .table thead {
-        background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-        color: white;
-    }
-    
-    .table th, .table td {
-        color: var(--text-color);
-        vertical-align: middle;
-        padding: 15px;
-        border-color: rgba(255,255,255,0.1);
-    }
-    
-    .cart_item {
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .cart_item:hover {
-        background-color: rgba(106, 65, 255, 0.1);
-        transform: scale(1.02);
-    }
-    
-    .cart_item img {
-        max-width: 100px;
-        border-radius: 10px;
-        transition: transform 0.3s ease;
-    }
-    
-    .cart_item img:hover {
-        transform: rotate(5deg) scale(1.1);
-    }
-    
-    .cart_item .fa-times {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        color: #ff4136;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-    }
-    
-    .cart_item .fa-times:hover {
-        transform: scale(1.3) rotate(90deg);
-    }
-    
-    .cart_price del {
-        color: #e052618f;
-        margin-right: 10px;
-    }
-    
-    .cart_price ins {
-        color: var(--accent-color);
-        text-decoration: none;
-    }
-    
-    .tedad {
-        width: 70px;
-        background-color: #2a2a4a;
-        color: var(--text-color);
-        border: 1px solid var(--primary-color);
-        border-radius: 5px;
-        text-align: center;
-    }
-    
-    .table_details {
-        background-color: #2a2a4a;
-        border-radius: 10px;
-    }
-    
-    .table_details td {
-        color: var(--text-color);
-        padding: 15px;
-    }
-    
-    .table_details .all {
-        font-weight: bold;
-        background-color: rgba(106, 65, 255, 0.2);
-    }
-    
-    .btn-main-masai {
-        background: linear-gradient(45deg, var(--accent-color), #00cc7a);
-        color: var(--bg-dark);
-        border: none;
-        padding: 15px 30px;
-        border-radius: 50px;
-        text-transform: uppercase;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(0,255,156,0.4);
-    }
-    
-    .btn-main-masai:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,255,156,0.6);
-    }
-    
-    /* Gaming Glitch Effect */
-    @keyframes glitch {
-        2%, 64% { transform: translate(2px, 0) skew(0deg); }
-        4%, 60% { transform: translate(-2px, 0) skew(0deg); }
-        62% { transform: translate(0, 0) skew(5deg); }
-    }
-    
-    .card-title span {
-        animation: glitch 1.5s infinite;
+        display: none;
     }
 
-    .price_alltd {
-    background: linear-gradient(
-        135deg, 
-    );
-    color: #0a0a0a;
-    font-weight: bold;
-    padding: 8px 15px;
-    border-radius: 15px;
-    box-shadow: 
-        0 10px 20px rgba(0,255,255,0.3),
-        0 -5px 15px rgba(0,123,255,0.2),
+    .cart_item td {
+        display: block;
+        text-align: right;
+        padding: 10px 15px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .cart_item td:last-child {
+        border-bottom: none;
+    }
+
+    .cart_item td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .quantity-wrapper {
+        justify-content: flex-end;
+    }
+
+    .quantity-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+    }
+
+    .tedad {
+        width: 60px;
+        height: 30px;
+        font-size: 14px;
+    }
+
+    .product-details-box {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+    }
 }
 
+
+:root {
+    --primary-color: #6b41ff;
+    --secondary-color: #4a11cc;
+    --bg-dark: #1a1a2e;
+    --text-color: #e0e0ff;
+    --accent-color: #00ff9c;
+}
+
+/* Global Styles */
+body {
+    font-family: 'Orbitron', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.cart-page {
+    margin-top: 50px;
+    background-color: var(--bg-dark);
+    color: var(--text-color);
+    font-family: 'Orbitron', sans-serif;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.card-title {
+    color: white;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-top: 5.5%;
+}
+
+.table {
+    background-color: #2a2a4a;
+    border-radius: 10px;
+    overflow-x: auto;
+}
+
+.table thead {
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    color: white;
+}
+
+.table th, .table td {
+    color: var(--text-color);
+    vertical-align: middle;
+    padding: 15px;
+    border-color: rgba(255,255,255,0.1);
+}
+
+.cart_item {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.cart_item:hover {
+    background-color: rgba(106, 65, 255, 0.1);
+    transform: scale(1.02);
+}
+
+.cart_item img {
+    max-width: 100px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.cart_item img:hover {
+    transform: rotate(5deg) scale(1.1);
+}
+
+.cart_item .fa-times {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ff4136;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.cart_item .fa-times:hover {
+    transform: scale(1.3) rotate(90deg);
+}
+
+.cart_price del {
+    color: #e052618f;
+    margin-right: 10px;
+}
+
+.cart_price ins {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.tedad {
+    width: 80px;
+    height: 40px;
+    background-color: #2a2a4a;
+    color: var(--accent-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.table_details {
+    background-color: #2a2a4a;
+    border-radius: 10px;
+}
+
+.table_details td {
+    color: var(--text-color);
+    padding: 15px;
+}
+
+.table_details .all {
+    font-weight: bold;
+    background-color: rgba(106, 65, 255, 0.2);
+}
+
+.btn-main-masai {
+    background: linear-gradient(45deg, var(--accent-color), #00cc7a);
+    color: var(--bg-dark);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,255,156,0.4);
+}
+
+.btn-main-masai:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,255,156,0.6);
+}
+
+
+
+{% comment %} quantity {% endcomment %}
+ 
 .quantity-wrapper {
     display: flex;
     align-items: center;
     position: relative;
     width: 120px;
+    justify-content: flex-end;
 }
 
 .quantity-wrapper form {
@@ -278,22 +253,23 @@
 }
 
 .quantity-btn.increase {
-    right: 0;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-.quantity-btn.decrease {
+    right: auto;
     left: 0;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+}
+
+.quantity-btn.decrease {
+    right: 0;
+    left: auto;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .quantity-btn:hover {
     background: #007bff;
     color: white;
 }
-
 
 .price_alltd span {
     font-size: 0.9em;
@@ -326,66 +302,6 @@
     transform: scale(1.05);
 }
 
-.tedad::-webkit-inner-spin-button,
-.tedad::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-.tedad[type=number] {
-    -moz-appearance: textfield;
-}
-.quantity-control {
-    justify-content: center;
-    align-items: center;
-}
-
-.quantity-wrapper {
-    display: flex;
-    align-items: center;
-    padding-top: 10%;
-    margin-bottom: 15%;
-    gap: 10px;
-}
-
-.quantity-btn {
-    width: 40px;
-    height: 40px;
-    background-color: #6b41ff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.3s ease;
-}
-
-.quantity-btn:hover {
-    background-color: #00ff9c;
-    transform: scale(1.1);
-}
-
-.quantity-btn.decrease:hover {
-    background-color: #ff4444;
-}
-
-.tedad {
-    width: 80px;
-    height: 40px;
-    background-color: #2a2a4a;
-    color: #00ff9c;
-    border: 2px solid #6b41ff;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 16px;
-    font-weight: bold;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
 
 .cart_content .item_property {
     color: #45ebd4;
@@ -397,11 +313,10 @@
     display: ruby;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-
     border-radius: 8px;
     padding: 10px;
-    max-width: 300px; 
-    margin: 0 auto; 
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 .product-details-box > div {
@@ -428,20 +343,6 @@
     font-size: 0.95rem;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .product-details-box {
-        grid-template-columns: repeat(2, 1fr);
-        max-width: 220px;
-    }
-}
-
-@media (max-width: 480px) {
-    .product-details-box {
-        grid-template-columns: 1fr;
-        max-width: 200px;
-    }
-}
 .more-parts-indicator {
     grid-column: span 3;
     text-align: center;
@@ -452,6 +353,196 @@
     border-radius: 4px;
 }
 
+
+
+.cart-page-content {
+    width: 80vw;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.cart_details {
+    background: linear-gradient(135deg, #1e1a1a00 25%, #47abbab5 100%);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 30px #00ff9c;
+    width: 100%;
+}
+
+.cart-page-aside {
+    width: 100%;
+}
+
+.table_details {
+    background-color: #2a2a4a;
+    border-radius: 10px;
+}
+
+.table_details td {
+    color: var(--text-color);
+    padding: 15px;
+}
+
+.table_details .all {
+    font-weight: bold;
+    background-color: rgba(106, 65, 255, 0.2);
+}
+
+.btn-main-masai {
+    background: linear-gradient(45deg, var(--accent-color), #00cc7a);
+    color: var(--bg-dark);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,255,156,0.4);
+}
+
+.btn-main-masai:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,255,156,0.6);
+}
+
+@media (max-width: 768px) {
+    .cart-page {
+        margin-top: 30px;
+    }
+    .cart_content {
+        padding: 20px;
+    }
+    .cart-page-content {
+        width: 100%;
+    }
+
+    .cart_details {
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .cart-page-aside {
+        width: 100%;
+    }
+
+    .quantity-control {
+        justify-content: center;
+    }
+    .quantity-wrapper form {
+        right: 35%;
+    }
+    {% comment %}  {% endcomment %}
+    
+}
+{% comment %}  {% endcomment %}
+/* Game-Inspired Mobile Style */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #1b1b1b;
+  color: #fff;
+  padding: 20px;
+  padding-bottom: 110px; /* Add extra padding to avoid content being covered by the fixed elements */
+}
+
+.cart-page-content {
+  background-color: #2c2c2c;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 120px; /* Add extra margin to avoid content being covered by the fixed elements */
+}
+
+.cart_details {
+  padding: 20px;
+}
+
+.table_details {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table_details td {
+  padding: 10px 0;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+.table_details td:first-child {
+  font-weight: bold;
+}
+
+.table_details td:last-child {
+  text-align: right;
+}
+
+.btn.big_btn {
+  display: block;
+  width: 100%;
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn.big_btn:hover {
+  background-color: #ff4d4d;
+}
+
+.btn-main-masai {
+  background-color: #4caf50;
+}
+
+.btn-main-masai:hover {
+  background-color: #43a047;
+}
+
+/* Fixed elements at the bottom */
+.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #2c2c2c;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+}
+
+.fixed-bottom tr {
+  background-color: #2c2c2c;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.fixed-bottom td {
+  font-weight: bold;
+  text-align: right;
+}
+
+.fixed-bottom .btn {
+  display: block;
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #ff6b6b;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.fixed-bottom .btn:hover {
+  background-color: #ff4d4d;
+}
     </style>
     
         <!-- main -->
@@ -466,7 +557,7 @@
                         {% if cart_items %}
                         <div class="table-responsive default">
                             <table class="table">
-                                <thead>
+                                <thead class="thead-mobile">
                                     <tr>
                                         <th scope="col">محصول</th>
                                         <th scope="col">جزئیات محصول</th>
@@ -478,7 +569,12 @@
                                 <tbody>
                                     {% for item in cart_items %}
                                     <tr class="cart_item">
-                                        <td>
+                                        <td data-label="محصول">
+                                            <h3 class="cart_title">
+                                                <a href="{{ item.product.get_absolute_url }}">
+                                                    {{ item.product.name }}
+                                                </a>
+                                            </h3>
                                             <a href="{{ item.product.get_absolute_url }}">
                                                 <img src="{{ item.product.poster.url }}" alt="{{ item.product.title }}">
                                             </a>
@@ -490,12 +586,8 @@
                                                 </button>
                                             </form>
                                         </td>
-                                        <td>
-                                            <h3 class="cart_title">
-                                                <a href="{{ item.product.get_absolute_url }}">
-                                                    {{ item.product.name }}
-                                                </a>
-                                            </h3>
+                                        <td data-label="جزئیات محصول">
+                                            
                                             <div class="product-details-box">
                                                 {% with parts_list=item.product.parts.all|slice:":2" %}
                                                     {% for part in parts_list %}
@@ -512,7 +604,7 @@
                                                 {% endwith %}
                                             </div>
                                         </td>
-                                        <td>
+                                        <td data-label="قیمت واحد">
                                             <div class="cart_price">
                                                 {% if item.product.discount %}
                                                     <del><span>{{ item.product.price|format_price }}<span></span></span></del>
@@ -522,7 +614,7 @@
                                                 {% endif %}
                                             </div>
                                         </td>
-                                        <td class="quantity-control">
+                                        <td data-label="تعداد" class="quantity-control">
                                             <div class="quantity-wrapper">
                                                 <form method="post" action="{% url 'carts:update_cart_item' item.id %}">
                                                     {% csrf_token %}
@@ -532,7 +624,7 @@
                                                 </form>
                                             </div>
                                         </td>
-                                        <td class="price_alltd">{{ item.get_total_price_product|format_price }} <span>تومان</span></td>
+                                        <td data-label="قیمت کل" class="price_alltd">{{ item.get_total_price_product|format_price }} <span>تومان</span></td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -543,37 +635,47 @@
                         {% endif %}
                     </div>
         
-                    <div class="cart-page-content col-xl-12 col-lg-12 col-md-12">
-                        <div class="row cart_details">
-                            <div class="cart-page-aside col-xl-4 col-lg-5 col-md-5 divider_details">
-                                <table class="table table_details">
-                                    <tbody>
-                                        <tr>
-                                            <td>قیمت کل سفارش:</td>
-                                            <td>{{ total_price|format_price }} <span>تومان</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>تعداد کل محصولات:</td>
-                                            <td>{{ total_quantity }} عدد</td>
-                                        </tr>
-                                        <tr class="all">
-                                            <td>قیمت قابل پرداخت:</td>
-                                            <td>{{ total_price|format_price }} <span>تومان</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                {% if has_address %}
-                                                    <a href="{% url 'orders:address_list' %}" class="btn big_btn btn-main-masai">تکمیل فرآیند خرید</a>
-                                                {% else %}
-                                                    <a href="{% url 'orders:add_address' %}" class="btn big_btn btn-main-masai">تکمیل فرآیند خرید</a>
-                                                {% endif %}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                    <style>
+                        
+                      </style>
+                      
+                      <div class="cart-page-content">
+                        <div class="cart_details">
+                          <table class="table_details">
+                            <tbody>
+                              <tr>
+                                <td>قیمت کل سفارش:</td>
+                                <td>{{ total_price|format_price }} <span>تومان</span></td>
+                              </tr>
+                              <tr>
+                                <td>تعداد کل محصولات:</td>
+                                <td>{{ total_quantity }} عدد</td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
-                    </div>
+                      </div>
+                      
+                      <div class="fixed-bottom">
+                        <table class="table_details">
+                          <tbody>
+                            <tr class="all">
+                              <td>قیمت قابل پرداخت:</td>
+                              <td>{{ total_price|format_price }} <span>تومان</span></td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">
+                                {% if has_address %}
+                                  <a href="{% url 'orders:address_list' %}" class="btn big_btn btn-main-masai">تکمیل فرآیند خرید</a>
+                                {% else %}
+                                  <a href="{% url 'orders:add_address' %}" class="btn big_btn btn-main-masai">تکمیل فرآیند خرید</a>
+                                {% endif %}
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+
                 </div>
             </div>
         </main>

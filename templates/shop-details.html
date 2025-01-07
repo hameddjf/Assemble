@@ -131,7 +131,7 @@
     }
 
     .comments-box {
-        display: flex;
+        display: flow;
         margin-bottom: 15px;
         background-color: #2a2a40;
         border-radius: 8px;
@@ -407,7 +407,13 @@
                         </div>
 
                         <div class="shop__details-short-description">
-                            <p>{{ truncated_description }}</p>
+                            <p class="text-wrap">{{ truncated_description }}</p>
+                            <style>
+                                    .text-wrap {
+                                        word-wrap: break-word;
+                                        white-space: normal;
+                                    }
+                            </style>
                         </div>
                         <div class="shop__details-model d-flex align-items-center">
                             <p class="model m-0">مدل:</p>
@@ -476,7 +482,13 @@
                             <div class="tab-content" id="descriptionTabContent">
                                 <div aria-labelledby="description-tab" class="tab-pane animation-none fade show active"
                                     id="description" role="tabpanel">
-                                    <p>{{product.description}}.</p>
+                                    <p class="text-wrap">{{ product.description }}</p>
+                                    <style>
+                                            .text-wrap {
+                                                word-wrap: break-word;
+                                                white-space: normal;
+                                            }
+                                    </style>
                                 </div>
                                 <div aria-labelledby="info-tab" class="tab-pane animation-none fade" id="info"
                                     role="tabpanel">
@@ -710,7 +722,13 @@
                                                                             {{ comment.created_at|jalali_date }}
                                                                         </span>
                                                                     </div>
-                                                                    <p>{{ comment.body }}</p>
+                                                                    <p class="text-wrap">{{ comment.body }}</p>
+                                                                        <style>
+                                                                            .text-wrap {
+                                                                                word-wrap: break-word;
+                                                                                white-space: normal;
+                                                                            }
+                                                                    </style>
                                                                     
                                                                     <!-- بخش واکنش‌ها -->
                                                                     <div class="comment-reactions">
@@ -761,8 +779,13 @@
                                                                                         {{ reply.created_at|jalali_date }}
                                                                                     </span>
                                                                                 </div>
-                                                                                <p>{{ reply.body }}</p>
-
+                                                                                <p class="text-wrap">{{ reply.body }}</p>
+                                                                                <style>
+                                                                                        .text-wrap {
+                                                                                            word-wrap: break-word;
+                                                                                            white-space: normal;
+                                                                                        }
+                                                                                </style>
                                                                                 <!-- بخش واکنش‌ها -->
                                                                                 <div class="comment-reactions">
                                                                                     <form method="POST" action="{% url 'comments:comment_reaction' comment.id 'like' %}">

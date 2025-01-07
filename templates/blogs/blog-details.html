@@ -131,7 +131,13 @@
                                 </ul>
                             </div>
                             <h2 class="title">{{ article.title }}</h2>
-                            {{ article.body }}
+                            <p class="text-wrap">{{ article.body }}</p>
+                                <style>
+                                    .text-wrap {
+                                        word-wrap: break-word;
+                                        white-space: normal;
+                                      }
+                            </style>
                             {% comment %} <blockquote> </blockquote> {% endcomment %}
                             {% comment %} <div class="blog-details-inner"><h4 class="inner-title"></h4><p></p></div> {% endcomment %}
                             {% comment %} <div class="blog-details-inner-img"><img alt="img" src="assets/img/blog/blog_post02.jpg" /></div> {% endcomment %}
@@ -300,7 +306,7 @@
                                 }
                             
                                 .comments-box {
-                                    display: flex;
+                                    display: flow;
                                     margin-bottom: 15px;
                                     background-color: #2a2a40;
                                     border-radius: 8px;

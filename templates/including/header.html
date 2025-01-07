@@ -60,11 +60,23 @@
                             </nav>
                         </div>
                         <!-- Mobile Menu  -->
+                         <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // مطمئن شوید منو به صورت پیش‌فرض بسته است
+                                const body = document.querySelector('body');
+                                body.classList.remove('mobile-menu-visible');
+                              
+                                // جلوگیری از باز شدن خودکار منو در اندازه‌های خاص
+                                window.addEventListener('resize', function() {
+                                  body.classList.remove('mobile-menu-visible');
+                                });
+                              });
+                         </script>
                         <div class="tgmobile__menu">
                             <nav class="tgmobile__menu-box">
                                 <div class="close-btn"><i class="flaticon-swords-in-cross-arrangement"></i></div>
                                 <div class="nav-logo">
-                                    <a href="index.html"><img src="{% static "assets/img/logo/logo.png" %}" alt="Logo"></a>
+                                    <a href="{% url 'main:special_products' %}"><img src="{% static "assets/img/logo/logo.png" %}" alt="Logo"></a>
                                 </div>
                                 <div class="tgmobile__search">
                                     <form action="#">
@@ -127,7 +139,7 @@
             <div class="offCanvas__body">
                 <div class="offCanvas__top">
                     <div class="offCanvas__logo logo">
-                        <a href="index.html"><img src="{% static "assets/img/logo/logo.png" %}" alt="Logo"></a>
+                        <a href="{% url 'main:special_products' %}"><img src="{% static "assets/img/logo/logo.png" %}" alt="Logo"></a>
                     </div>
                     <div class="offCanvas__toggle">
                         <i class="flaticon-swords-in-cross-arrangement"></i>
